@@ -1,0 +1,19 @@
+{
+  "name": "bookmarklets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://GorgonFreeman@github.com/GorgonFreeman/Bookmarklets.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GorgonFreeman/Bookmarklets/issues"
+  },
+  "homepage": "https://github.com/GorgonFreeman/Bookmarklets#readme"
+}
