@@ -1,14 +1,7 @@
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="/Bookmarklets/styles.css">
-  </head>
-  <body>
-    <!-- partial:_bookmarklet.html --><a 
+<a 
   id="bookmarklet-a" 
   class="bookmarklet" 
   href="javascript:(function()%7Bfunction%20copyToClipboard(str)%20%7B%0A%20%20const%20el%20%3D%20document.createElement('textarea')%3B%0A%20%20el.value%20%3D%20str%3B%0A%20%20el.setAttribute('readonly'%2C%20'')%3B%0A%20%20el.style.position%20%3D%20'absolute'%3B%0A%20%20el.style.left%20%3D%20'-9999px'%3B%0A%20%20document.body.appendChild(el)%3B%0A%20%20el.select()%3B%0A%20%20document.execCommand('copy')%3B%0A%20%20document.body.removeChild(el)%3B%0A%7D%3B%0A%0Aconst%20params%20%3D%20new%20Proxy(new%20URLSearchParams(window.location.search)%2C%20%7B%0A%20%20get%3A%20(searchParams%2C%20prop)%20%3D%3E%20searchParams.get(prop)%2C%0A%7D)%3B%0A%0Aconst%20getAndUseProductInfo%20%3D%20async%20()%20%3D%3E%20%7B%0A%20%20const%20variantParam%20%3D%20params.variant%3B%0A%20%20const%20%7B%20origin%2C%20pathname%20%7D%20%3D%20location%3B%0A%20%20const%20productJSONURL%20%3D%20%60%24%7B%20origin%20%7D%24%7B%20pathname%20%7D.json%60%3B%0A%20%20const%20response%20%3D%20await%20fetch(productJSONURL)%3B%0A%20%20const%20data%20%3D%20await%20response.json()%3B%0A%0A%20%20const%20variant%20%3D%20data.product.variants.find(v%20%3D%3E%20v.id%20%3D%3D%20variantParam)%3B%0A%20%20const%20%7B%20sku%20%7D%20%3D%20variant%3B%0A%20%20console.log('SKU%20of%20current%20variant%3A'%2C%20sku)%3B%0A%20%20copyToClipboard(sku)%3B%0A%7D%0A%0AgetAndUseProductInfo()%3B%7D)()%3B"
 >
   Title
-</a><!-- partial -->
-  </body>
-</html>
+</a>
