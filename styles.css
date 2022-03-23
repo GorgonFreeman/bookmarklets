@@ -1,0 +1,26 @@
+:root {
+  --bg_colour: white;
+  --bookmarklet_colour: orange;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg_colour: #2f2f33;
+    --bookmarklet_colour: orange;
+  }
+}
+
+html {
+  background-color: var(--bg_colour);
+}
+
+.bookmarklet {
+  background-color: var(--bookmarklet_colour);
+  padding: 10px;
+  border-radius: 10px;
+  padding-left: 30px;
+  color: white;
+  text-decoration: none;
+  font-family: sans-serif;
+  display: inline-block;
+}
