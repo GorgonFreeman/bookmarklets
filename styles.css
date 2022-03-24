@@ -23,4 +23,9 @@ html {
   text-decoration: none;
   font-family: sans-serif;
   display: inline-block;
+  cursor: grab;
+}
+
+.bookmarklet:active {
+  cursor: grabbing;
 }
