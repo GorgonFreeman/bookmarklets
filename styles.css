@@ -7,6 +7,7 @@
   :root {
     --bg_colour: #2f2f33;
     --bookmarklet_colour: orange;
+    --bookmarklet_shadow: #976100;
   }
 }
 
@@ -24,6 +25,7 @@ html {
   font-family: sans-serif;
   display: inline-block;
   cursor: grab;
+  box-shadow: 5px 5px var(--bookmarklet_shadow);
 }
 
 .bookmarklet:active {
