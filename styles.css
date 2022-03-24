@@ -16,9 +16,9 @@ html {
 
 .bookmarklet {
   background-color: var(--bookmarklet_colour);
-  padding: 10px;
+  margin: 10px 5px;
+  padding: 10px 20px 10px 40px;
   border-radius: 10px;
-  padding-left: 30px;
   color: white;
   text-decoration: none;
   font-family: sans-serif;
