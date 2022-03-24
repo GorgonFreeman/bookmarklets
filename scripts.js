@@ -13,12 +13,6 @@ const bookmarkletTemplate = (title, script) => {
 // Scripts must have ` and $ escaped
 const bookmarklets = [
   {
-    title: 'Test',
-    script: `
-      console.log('Hi!');
-    `
-  },
-  {
     title: 'Get Date',
     script: `
       const copyToClipboard = str => {
