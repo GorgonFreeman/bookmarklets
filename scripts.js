@@ -5,7 +5,7 @@ const bookmarkletTemplate = (b) => {
     <a 
       id="${ title }" 
       class="bookmarklet" 
-      href="javascript:${ encodeURIComponent(`(function(){${ script.toString().trim() }})();`) }"
+      href="javascript:${ encodeURIComponent(`(function(){${ script.toString().replace('() => {', '').slice(0, -1).trim() }})();`) }"
       ${ typeof icon === 'undefined' ? '' : `icon="${ icon }"` }
     >
       ${ typeof icon === 'undefined' ? '' : `<img src="${ icon }" />` }
