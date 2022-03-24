@@ -1,5 +1,6 @@
 const bookmarkletTemplate = (b) => {
-  const { title, script, icon } = b;
+  // Icon currently doesn't work in Chrome, so not bothering for the moment
+  const { title, script } = b;
   return `
     <a 
       id="${ title }" 
