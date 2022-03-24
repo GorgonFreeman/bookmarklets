@@ -151,10 +151,9 @@ const bookmarklets = [
 /*
   {
     title: 'Title',
-    script: `
+    script: () => {
       console.log('hi!');
-
-    `
+    }
   }
 */
 
