@@ -1,6 +1,6 @@
 const bookmarkletTemplate = (b) => {
   // Icon currently doesn't work in Chrome, so not bothering for the moment
-  const { title, script } = b;
+  const { title, script, version } = b;
   return `
     <a 
       id="${ title }" 
@@ -10,6 +10,7 @@ const bookmarkletTemplate = (b) => {
     >
       ${ typeof icon === 'undefined' ? '' : `<img src="${ icon }" />` }
       ${ title }
+      <div class="bookmarklet_version">${ version }</div>
     </a>
   `;
 }
