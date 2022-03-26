@@ -3,6 +3,7 @@
   --title_colour: #2f2f33;
   --bookmarklet_colour: orange;
   --bookmarklet_shadow: #976100;
+  --bookmarklet_version_colour: gray;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,4 +38,13 @@ h1 {
 
 .bookmarklet:active {
   cursor: grabbing;
+}
+
+.bookmarklet_version {
+  display: inline-block;
+  font-size: 10px;
+  background: var(--bookmarklet_version_colour);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 5px;
 }

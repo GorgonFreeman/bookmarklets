@@ -10,7 +10,7 @@ const bookmarkletTemplate = (b) => {
     >
       ${ typeof icon === 'undefined' ? '' : `<img src="${ icon }" />` }
       ${ title }
-      <div class="bookmarklet_version">${ version }</div>
+      <div class="bookmarklet_version">v${ version.toString() }</div>
     </a>
   `;
 }
