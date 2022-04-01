@@ -16,6 +16,11 @@
 html {
   background-color: var(--bg_colour);
   color: var(--text_colour);
+  font-family: sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Times;
 }
 
 h1 {
