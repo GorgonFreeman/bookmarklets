@@ -1,6 +1,6 @@
 :root {
   --bg_colour: white;
-  --title_colour: #2f2f33;
+  --text_colour: #2f2f33;
   --bookmarklet_colour: orange;
   --bookmarklet_shadow: #976100;
   --bookmarklet_version_colour: gray;
@@ -9,17 +9,17 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg_colour: #2f2f33;
-    --title_colour: white;
+    --text_colour: white;
   }
 }
 
 html {
   background-color: var(--bg_colour);
+  color: var(--text_colour);
 }
 
 h1 {
   text-align: center;
-  color: var(--title_colour);
   margin: 50px 0;
 }
 
