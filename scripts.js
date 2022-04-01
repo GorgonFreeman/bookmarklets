@@ -15,7 +15,6 @@ const bookmarkletTemplate = (b) => {
   `;
 }
 
-// Scripts must have ` and $ escaped
 const bookmarklets = [
   {
     title: 'Get Date in YYYY-MM-DD',
