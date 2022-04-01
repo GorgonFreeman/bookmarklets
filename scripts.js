@@ -296,8 +296,8 @@ const categories = [
   'Just for development'
 ];
 
-const html = categories.map(c => {
-  categoryBookmarklets = bookmarklets.filter(b => b.category === c);
+const html = categories.map((c, index) => {
+  categoryBookmarklets = bookmarklets.filter(b => b.category === index);
 
   const categoryBookmarkletsHTML = categoryBookmarklets.map(b => {
     return bookmarkletTemplate(b);
@@ -307,6 +307,8 @@ const html = categories.map(c => {
     <h2>${ c }</h2>
     ${ categoryBookmarkletsHTML }
   `;
+
+  return categoryHTML;
 }).join('');
 
 document.getElementById('bookmarkletContainer').innerHTML = html;
