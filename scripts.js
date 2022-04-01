@@ -1,6 +1,6 @@
 const bookmarkletTemplate = (b) => {
   // Icon currently doesn't work in Chrome, so not bothering for the moment
-  const { title, script, version } = b;
+  const { title, script, docs, version } = b;
   return `
     <a 
       id="${ title }" 
@@ -11,8 +11,16 @@ const bookmarkletTemplate = (b) => {
       ${ typeof icon === 'undefined' ? '' : `<img src="${ icon }" />` }
       ${ title }
       <div class="bookmarklet_version">v${ version }</div>
+      <button class="bookmarklet_docs" onClick="linkOut('${ docs }')">?</button>
     </a>
   `;
+}
+
+const linkOut = (url) => {
+  event.preventDefault();
+  event.stopPropagation();
+  window.open(url);
+  return false;
 }
 
 const bookmarklets = [
