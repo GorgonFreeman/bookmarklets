@@ -68,4 +68,5 @@ h1 {
   align-items: center;
   border: none;
   cursor: pointer;
+  fill: var(--text_colour);
 }
