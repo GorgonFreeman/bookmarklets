@@ -277,6 +277,43 @@ const bookmarklets = [
     docs: 'https://gist.github.com/GorgonFreeman/3500783581b6100963921919a1073c1b',
     version: '2.0',
     category: 0
+  },
+  {
+    title: 'JSON to CSV',
+    script: () => {
+      let arr = JSON.parse(prompt('Paste your array of JSON objects here:'));
+      console.log('Data', arr);
+
+      const cols = arr.map(item => Object.keys(item))
+        .flat()
+        // Make keys unique
+        .filter((value, index, self) => {
+          return self.indexOf(value) === index;
+        })
+        .join(',');
+
+      const rows = arr.map(item => Object.values(item).join(','));
+      console.log('Cols', cols);
+      console.log('Rows', rows);
+
+      const csvContent = [cols, ...rows].join('\n');
+
+      const download = (filename, text) => {
+        const el = document.createElement('a');
+        el.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        el.setAttribute('download', filename);
+
+        el.style.display = 'none';
+        document.body.appendChild(el);
+
+        el.click();
+
+        document.body.removeChild(el);
+      }
+    },
+    docs: 'https://gist.github.com/GorgonFreeman/d174e3365c126363e6c401a8bd2a31f3',
+    version: '1.0',
+    category: 2
   }
 ];
 
