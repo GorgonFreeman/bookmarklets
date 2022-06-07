@@ -11,7 +11,7 @@ const bookmarkletTemplate = (b) => {
       ${ typeof icon === 'undefined' ? '' : `<img src="${ icon }" />` }
       ${ title }
       <div class="bookmarklet_version">v${ version }</div>
-      <button class="bookmarklet_docs" onClick="linkOut('${ docs }')">${ questionMarkIcon }</button>
+      <button class="bookmarklet_docs" ${ docs ? `onClick="linkOut('${ docs }')"` : '' }>${ questionMarkIcon }</button>
     </a>
   `;
 }
@@ -321,7 +321,7 @@ const bookmarklets = [
       const wishlistButtons = Array.from(document.querySelectorAll('.iWishAddColl'));
       wishlistButtons.forEach(el => el.click());
     },
-    docs: '',
+    docs: false,
     version: '1.0',
     category: 3
   }
