@@ -314,6 +314,16 @@ const bookmarklets = [
     docs: 'https://gist.github.com/GorgonFreeman/d174e3365c126363e6c401a8bd2a31f3',
     version: '1.0',
     category: 2
+  },
+  {
+    title: 'Add All To Wishlist',
+    script: () => {
+      const wishlistButtons = Array.from(document.querySelectorAll('.iWishAddColl'));
+      wishlistButtons.forEach(el => el.click());
+    },
+    docs: '',
+    version: '1.0',
+    category: 3
   }
 ];
 
@@ -331,8 +341,9 @@ const bookmarklets = [
 
 const categories = [
   'Super useful',
-  'Nifty',
-  'Just for development'
+  'Useful',
+  'Just for development',
+  'Very niche',
 ];
 
 const html = categories.map((c, index) => {
