@@ -324,6 +324,121 @@ const bookmarklets = [
     docs: false,
     version: '1.0',
     category: 3
+  },
+  {
+    title: 'Image Ripper',
+    script: () => {
+      // To Do: When digging for images and checking parents, check if the size of the image is similar to the clicked element, so we don't return something completely random.
+
+      const download = (filename, content, isImage) => {
+        const el = document.createElement('a');
+        el.setAttribute('href', isImage ? content : `data:text/plain;charset=utf-8,${ encodeURIComponent(content) }`);
+        el.setAttribute('download', filename);
+
+        el.style.display = 'none';
+        document.body.appendChild(el);
+
+        el.click();
+
+        document.body.removeChild(el);
+      }
+
+      const srcToImageURL = async src => {
+        const a = await fetch(src);
+        const b = await a.blob();
+        const c = URL.createObjectURL(b);
+        return c;
+      }
+
+      const checkAndRipImage = async el => {
+        // Get image src or similar
+        const nodeName = el.nodeName.toLowerCase();
+
+        // Check if what we clicked was an image, and get the src.
+        if (nodeName === 'img') {
+          // currentSrc eliminates any srcset weirdness.
+          const src = el.currentSrc;
+          const filename = src.split('?')[0];
+          const imageURL = await srcToImageURL(src);
+          download(filename, imageURL, true);
+          return true;
+        }
+
+        // If it was an svg, download that.
+        if (nodeName === 'svg') {
+          const svgMarkup = el.outerHTML;
+          download('enjoy_your_svg.svg', svgMarkup, false);
+          return true;
+        }
+
+        // console.error('Unable to get the image');
+        return false;
+      }
+
+      const digAndRip = async el => {
+        const imagesBeneath = el.querySelectorAll('img, svg');
+        // console.log(imagesBeneath, imagesBeneath.length);
+        if (imagesBeneath.length > 0) {
+          
+          return await checkAndRipImage(imagesBeneath[0]);
+        }
+
+        return false;
+      }
+
+      document.addEventListener('click', async function(e) {
+        e.preventDefault();
+        e.stopPropagation(); 
+        const { target } = e;
+
+        let imageFound = false;
+
+        imageFound = await checkAndRipImage(target);
+        imageFound = await digAndRip(target);
+
+        if (imageFound) {
+          return;
+        }
+
+        let node = target;
+        let exhausted = false;
+
+        while (!imageFound && !exhausted) {
+          try {
+            const { parentNode } = node;
+
+            if (!parentNode) {
+              throw 'Reached the top of the doc';
+            }
+
+            const siblings = Array.from(parentNode.children).filter(child => child !== node);
+            for (let sibling of siblings) {
+              imageFound = await checkAndRipImage(sibling);
+              if (imageFound) {
+                console.log('Found it!', sibling);
+                return;
+              }
+              imageFound = await digAndRip(sibling);
+              if (imageFound) {
+                console.log('Found it inside!', sibling);
+                return;
+              }
+            }
+
+            node = parentNode;
+          } catch(err) {
+            console.warn(err);
+            exhausted = true;
+          }
+        }
+
+        console.error('Unable to get the image BIG TIME');
+        return false;
+      }, { once: true });
+    },
+    docs: false,
+    version: '0.9',
+    category: 4
   }
 ];
 
@@ -344,6 +459,7 @@ const categories = [
   'Useful',
   'Just for development',
   'Very niche',
+  'Under construction',
 ];
 
 const html = categories.map((c, index) => {
