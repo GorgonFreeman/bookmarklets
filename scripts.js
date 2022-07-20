@@ -400,6 +400,11 @@ const bookmarklets = [
         let imageFound = false;
 
         imageFound = await checkAndRipImage(target);
+
+        if (imageFound) {
+          return;
+        }
+        
         imageFound = await digAndRip(target);
 
         if (imageFound) {
