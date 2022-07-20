@@ -368,6 +368,9 @@ const bookmarklets = [
 
         // If it was an svg, download that.
         if (nodeName === 'svg') {
+          if (!el.attributes.xmlns) {
+            el.attributes.xmlns = 'http://www.w3.org/2000/svg'
+          }
           const svgMarkup = el.outerHTML;
           download('enjoy_your_svg.svg', svgMarkup, false);
           return true;
