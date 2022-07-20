@@ -331,6 +331,7 @@ const bookmarklets = [
       // To Do: When digging for images and checking parents, check if the size of the image is similar to the clicked element, so we don't return something completely random.
       // To Do: Check for backgrounds
       // To Do: Get maximum sizes of images from known CDNs, e.g. master in Shopify
+      // To Do: Constrain image search to area of click target
 
       const download = (filename, content, isImage) => {
         const el = document.createElement('a');
