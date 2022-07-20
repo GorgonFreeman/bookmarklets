@@ -329,6 +329,8 @@ const bookmarklets = [
     title: 'Image Ripper',
     script: () => {
       // To Do: When digging for images and checking parents, check if the size of the image is similar to the clicked element, so we don't return something completely random.
+      // To Do: Add xmlns="http://www.w3.org/2000/svg" to found SVGs
+      // To Do: Check for backgrounds
 
       const download = (filename, content, isImage) => {
         const el = document.createElement('a');
