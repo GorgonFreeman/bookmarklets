@@ -371,7 +371,7 @@ const bookmarklets = [
         if (nodeName === 'svg') {
           let svgMarkup = el.outerHTML;
           if (!el.attributes.xmlns) {
-            svgMarkup = svgMarkup.replace(/svg/, 'svg xmlns="http://www.w3.org"');
+            svgMarkup = svgMarkup.replace(/svg/, 'svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/2000/xlink"');
           }
           download('enjoy_your_svg.svg', svgMarkup, false);
           return true;
