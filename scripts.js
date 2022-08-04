@@ -557,6 +557,65 @@ const bookmarklets = [
     version: '1.0',
     category: 4
   },
+  {
+    title: 'Get Product Data in Staff Purchase Sheet Format',
+    script: () => {
+      function copyToClipboard(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      };
+
+      const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+      });
+
+      const separator = ',';
+
+      const capitaliseFirstLetter = string => {
+        return string.charAt(0).toLocaleUpperCase() + string.slice(1);
+      }
+
+      const getAndUseProductInfo = async () => {
+        const variantParam = params.variant;
+        const { origin, pathname } = location;
+        const productJSONURL = `${ origin }${ pathname }.json`;
+        const response = await fetch(productJSONURL);
+        const data = await response.json();
+
+        console.log(data.product);
+        // Title, colour, size, price
+
+        const { product } = data;
+        const { title, variants, options, tags } = product;
+
+        const colourTag = tags.split(', ').find(tag => tag.indexOf('colour:') !== -1);
+        const colour = colourTag ? capitaliseFirstLetter(colourTag.split(':')[1]) : '';
+
+        const sizeOptionIndex = options.findIndex(o => o.name === 'Size') + 1;
+        const sizeOptionProp = `option${ sizeOptionIndex }`;
+
+        const variant = product.variants.find(v => v.id == variantParam);
+        // Because -1 becomes 0, we can just use truthy
+        const size = sizeOptionIndex ? capitaliseFirstLetter(variant[sizeOptionProp]) : '';
+
+        const price = `$${ variant.price }`;
+
+        copyToClipboard([title, colour, size, price].join(separator));
+      }
+
+      getAndUseProductInfo();
+    },
+    docs: '',
+    version: '1.0',
+    category: 1
+  },
 ];
 
 /*
