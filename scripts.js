@@ -448,9 +448,45 @@ const bookmarklets = [
       }, { once: true });
     },
     docs: false,
-    version: '0.9',
+    version: '0.1',
     category: 4
-  }
+  },
+  {
+    title: 'Mystery Thing Doer',
+    script: () => {
+
+      // Pizza Hut Form Filler
+      const data = {
+        firstName: 'John',
+        lastName: 'Martin',
+        email: 'bindiiboy@yahoo.com.au',
+        mobile: '0430026467',
+      };
+
+      Object.entries(data).forEach(([k,v]) => {
+        const input = document.querySelector(`[name=${ k }]`);
+
+        // window.setTimeout(function () { 
+          input.value = v;
+          input.dispatchEvent(new Event('input'));
+
+          // Unused events
+
+          // input.focus();
+          // input.click();
+          // input.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'a', bubbles: true }));
+          // input.dispatchEvent(new KeyboardEvent('keypress', { 'keyCode': 8, bubbles: true }));
+          // input.dispatchEvent(new Event('change', { bubbles: true }));
+          // input.classList.add('is-valid');
+        // }, 0); 
+      });
+
+      document.querySelector('[id="T&C Agreement-agreement"]').click();
+    },
+    docs: false,
+    version: '1.0',
+    category: 4
+  },
 ];
 
 /*
