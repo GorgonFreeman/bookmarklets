@@ -452,7 +452,7 @@ const bookmarklets = [
     category: 4
   },
   {
-    title: 'Mystery Thing Doer',
+    title: 'Pizza Hut Form Filler J1',
     script: () => {
 
       // Pizza Hut Form Filler
@@ -461,6 +461,78 @@ const bookmarklets = [
         lastName: 'Martin',
         email: 'bindiiboy@yahoo.com.au',
         mobile: '0430026467',
+      };
+
+      Object.entries(data).forEach(([k,v]) => {
+        const input = document.querySelector(`[name=${ k }]`);
+        input.value = v;
+        input.dispatchEvent(new Event('input'));
+      });
+
+      document.querySelector('[id="T&C Agreement-agreement"]').click();
+    },
+    docs: false,
+    version: '1.0',
+    category: 4
+  },
+  {
+    title: 'Pizza Hut Form Filler J2',
+    script: () => {
+
+      // Pizza Hut Form Filler
+      const data = {
+        firstName: 'Lucien',
+        lastName: 'Martin',
+        email: 'mechaniz3d_ac@yahoo.com.au',
+        mobile: '0404414692',
+      };
+
+      Object.entries(data).forEach(([k,v]) => {
+        const input = document.querySelector(`[name=${ k }]`);
+        input.value = v;
+        input.dispatchEvent(new Event('input'));
+      });
+
+      document.querySelector('[id="T&C Agreement-agreement"]').click();
+    },
+    docs: false,
+    version: '1.0',
+    category: 4
+  },
+  {
+    title: 'Pizza Hut Form Filler S1',
+    script: () => {
+
+      // Pizza Hut Form Filler
+      const data = {
+        firstName: 'Joy',
+        lastName: 'Chin',
+        email: 'joyinthemiddle@gmail.com',
+        mobile: '0479187849',
+      };
+
+      Object.entries(data).forEach(([k,v]) => {
+        const input = document.querySelector(`[name=${ k }]`);
+        input.value = v;
+        input.dispatchEvent(new Event('input'));
+      });
+
+      document.querySelector('[id="T&C Agreement-agreement"]').click();
+    },
+    docs: false,
+    version: '1.0',
+    category: 4
+  },
+  {
+    title: 'Pizza Hut Form Filler S2',
+    script: () => {
+
+      // Pizza Hut Form Filler
+      const data = {
+        firstName: 'Sharon',
+        lastName: 'Chin',
+        email: 'sharonjoychin@gmail.com',
+        mobile: '0404438432',
       };
 
       Object.entries(data).forEach(([k,v]) => {
