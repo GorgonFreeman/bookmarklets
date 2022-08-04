@@ -465,20 +465,8 @@ const bookmarklets = [
 
       Object.entries(data).forEach(([k,v]) => {
         const input = document.querySelector(`[name=${ k }]`);
-
-        // window.setTimeout(function () { 
-          input.value = v;
-          input.dispatchEvent(new Event('input'));
-
-          // Unused events
-
-          // input.focus();
-          // input.click();
-          // input.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'a', bubbles: true }));
-          // input.dispatchEvent(new KeyboardEvent('keypress', { 'keyCode': 8, bubbles: true }));
-          // input.dispatchEvent(new Event('change', { bubbles: true }));
-          // input.classList.add('is-valid');
-        // }, 0); 
+        input.value = v;
+        input.dispatchEvent(new Event('input'));
       });
 
       document.querySelector('[id="T&C Agreement-agreement"]').click();
