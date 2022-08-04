@@ -377,6 +377,16 @@ const bookmarklets = [
           return true;
         }
 
+        // If it's an element with a background image, download that.
+        const backgroundImageFromCSS = window.getComputedStyle(el).getPropertyValue('background-image');
+        if (backgroundImageFromCSS) {
+          const extractBGRegex = /(?:\(['"]?)(.*?)(?:['"]?\))/;
+          const src = extractBGRegex.exec(backgroundImageFromCSS)[1];
+          const filename = src.split('?')[0];
+          download(filename, src, true);
+          return true;
+        }
+
         // console.error('Unable to get the image');
         return false;
       }
