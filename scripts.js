@@ -667,12 +667,13 @@ const bookmarklets = [
 
       const getAndUseCart = async () => {
         const cartContents = await fetch('/cart.json').then(response => response.json());
-        const results = [];
-        for (let item of cartContents.items) {
-          const { handle, variant_id } = item;
-          const itemInfo = await getProductInfo(handle, variant_id);
-          results.push(itemInfo);
-        }
+        const results = await Promise.all(
+          cartContents.items.map(async (item) => {
+            const { handle, variant_id } = item;
+            const itemInfo = await getProductInfo(handle, variant_id);
+            return itemInfo;
+          })
+        );
         copyToClipboard(results.join('\n'));
         alert('Done!');
       }
