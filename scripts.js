@@ -11,7 +11,7 @@ const bookmarkletTemplate = (b) => {
       ${ typeof icon === 'undefined' ? '' : `<img src="${ icon }" />` }
       ${ title }
       <div class="bookmarklet_version">v${ version }</div>
-      <button class="bookmarklet_docs" ${ docs ? `onClick="linkOut('${ docs }')"` : '' }>${ questionMarkIcon }</button>
+      ${ docs ? `<button class="bookmarklet_docs" onClick="linkOut('${ docs }')">${ questionMarkIcon }</button>` : '' }
     </a>
   `;
 }
