@@ -714,8 +714,10 @@ const html = categories.map((c, index) => {
   }).join('');
 
   const categoryHTML = `
-    <h2>${ c }</h2>
-    ${ categoryBookmarkletsHTML }
+    <div class="category">
+      <h2>${ c }</h2>
+      ${ categoryBookmarkletsHTML }
+    </div>
   `;
 
   return categoryHTML;
