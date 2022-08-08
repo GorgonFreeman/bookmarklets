@@ -487,7 +487,7 @@ const bookmarklets = [
       document.querySelector('[id="T&C Agreement-agreement"]').click();
     },
     docs: false,
-    version: '1.0',
+    version: '1.1',
     category: 4
   },
   {
@@ -516,7 +516,7 @@ const bookmarklets = [
       document.querySelector('[id="T&C Agreement-agreement"]').click();
     },
     docs: false,
-    version: '1.0',
+    version: '1.1',
     category: 4
   },
   {
@@ -545,7 +545,7 @@ const bookmarklets = [
       document.querySelector('[id="T&C Agreement-agreement"]').click();
     },
     docs: false,
-    version: '1.0',
+    version: '1.1',
     category: 4
   },
   {
@@ -574,7 +574,7 @@ const bookmarklets = [
       document.querySelector('[id="T&C Agreement-agreement"]').click();
     },
     docs: false,
-    version: '1.0',
+    version: '1.1',
     category: 4
   },
   // {
