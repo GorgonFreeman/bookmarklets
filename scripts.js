@@ -700,7 +700,7 @@ const bookmarklets = [
 
       getAndUseCart();
     },
-    docs: '',
+    docs: 'https://gist.github.com/GorgonFreeman/4aef91b13c7c0d88e4dcf28fe4983894',
     version: '1.0',
     category: 1
   },
