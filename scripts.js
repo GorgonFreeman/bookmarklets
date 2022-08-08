@@ -471,12 +471,17 @@ const bookmarklets = [
         lastName: 'Martin',
         email: 'bindiiboy@yahoo.com.au',
         mobile: '0430026467',
+        'Re-enter Phone Number': '0430026467',
       };
 
       Object.entries(data).forEach(([k,v]) => {
-        const input = document.querySelector(`[name=${ k }]`);
-        input.value = v;
-        input.dispatchEvent(new Event('input'));
+        try {
+          const input = document.querySelector(`[name="${ k }"]`);
+          input.value = v;
+          input.dispatchEvent(new Event('input'));  
+        } catch(err) {
+          console.warn(err);
+        }
       });
 
       document.querySelector('[id="T&C Agreement-agreement"]').click();
@@ -495,12 +500,17 @@ const bookmarklets = [
         lastName: 'Martin',
         email: 'mechaniz3d_ac@yahoo.com.au',
         mobile: '0404414692',
+        'Re-enter Phone Number': '0404414692',
       };
 
       Object.entries(data).forEach(([k,v]) => {
-        const input = document.querySelector(`[name=${ k }]`);
-        input.value = v;
-        input.dispatchEvent(new Event('input'));
+        try {
+          const input = document.querySelector(`[name="${ k }"]`);
+          input.value = v;
+          input.dispatchEvent(new Event('input'));  
+        } catch(err) {
+          console.warn(err);
+        }
       });
 
       document.querySelector('[id="T&C Agreement-agreement"]').click();
@@ -519,12 +529,17 @@ const bookmarklets = [
         lastName: 'Chin',
         email: 'joyinthemiddle@gmail.com',
         mobile: '0479187849',
+        'Re-enter Phone Number': '0479187849',
       };
 
       Object.entries(data).forEach(([k,v]) => {
-        const input = document.querySelector(`[name=${ k }]`);
-        input.value = v;
-        input.dispatchEvent(new Event('input'));
+        try {
+          const input = document.querySelector(`[name="${ k }"]`);
+          input.value = v;
+          input.dispatchEvent(new Event('input'));  
+        } catch(err) {
+          console.warn(err);
+        }
       });
 
       document.querySelector('[id="T&C Agreement-agreement"]').click();
@@ -543,12 +558,17 @@ const bookmarklets = [
         lastName: 'Chin',
         email: 'sharonjoychin@gmail.com',
         mobile: '0404438432',
+        'Re-enter Phone Number': '0404438432',
       };
 
       Object.entries(data).forEach(([k,v]) => {
-        const input = document.querySelector(`[name=${ k }]`);
-        input.value = v;
-        input.dispatchEvent(new Event('input'));
+        try {
+          const input = document.querySelector(`[name="${ k }"]`);
+          input.value = v;
+          input.dispatchEvent(new Event('input'));  
+        } catch(err) {
+          console.warn(err);
+        }
       });
 
       document.querySelector('[id="T&C Agreement-agreement"]').click();
