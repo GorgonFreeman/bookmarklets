@@ -472,6 +472,8 @@ const bookmarklets = [
         email: 'bindiiboy@yahoo.com.au',
         mobile: '0430026467',
         'Re-enter Phone Number': '0430026467',
+        'Re-enter Phone': '0430026467',
+        'Re-enter Email': 'bindiiboy@yahoo.com.au',
       };
 
       Object.entries(data).forEach(([k,v]) => {
@@ -501,6 +503,8 @@ const bookmarklets = [
         email: 'mechaniz3d_ac@yahoo.com.au',
         mobile: '0404414692',
         'Re-enter Phone Number': '0404414692',
+        'Re-enter Phone': '0404414692',
+        'Re-enter Email': 'mechaniz3d_ac@yahoo.com.au',
       };
 
       Object.entries(data).forEach(([k,v]) => {
@@ -530,6 +534,8 @@ const bookmarklets = [
         email: 'joyinthemiddle@gmail.com',
         mobile: '0479187849',
         'Re-enter Phone Number': '0479187849',
+        'Re-enter Phone': '0479187849',
+        'Re-enter Email': 'joyinthemiddle@gmail.com',
       };
 
       Object.entries(data).forEach(([k,v]) => {
@@ -559,6 +565,8 @@ const bookmarklets = [
         email: 'sharonjoychin@gmail.com',
         mobile: '0404438432',
         'Re-enter Phone Number': '0404438432',
+        'Re-enter Phone': '0404438432',
+        'Re-enter Email': 'sharonjoychin@gmail.com',
       };
 
       Object.entries(data).forEach(([k,v]) => {
