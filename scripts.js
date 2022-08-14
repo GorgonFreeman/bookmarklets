@@ -524,6 +524,37 @@ const bookmarklets = [
     category: 4
   },
   {
+    title: 'Pizza Hut Form Filler J3',
+    script: () => {
+
+      // Pizza Hut Form Filler
+      const data = {
+        firstName: 'Luke',
+        lastName: 'Martin',
+        email: 'oblongatrium+luke@gmail.com',
+        mobile: '0493157207',
+        'Re-enter Phone Number': '0493157207',
+        'Re-enter Phone': '0493157207',
+        'Re-enter Email': 'oblongatrium+luke@gmail.com',
+      };
+
+      Object.entries(data).forEach(([k,v]) => {
+        try {
+          const input = document.querySelector(`[name="${ k }"]`);
+          input.value = v;
+          input.dispatchEvent(new Event('input'));  
+        } catch(err) {
+          console.warn(err);
+        }
+      });
+
+      document.querySelector('[id="T&C Agreement-agreement"]').click();
+    },
+    docs: false,
+    version: '1.1',
+    category: 4
+  },
+  {
     title: 'Pizza Hut Form Filler S1',
     script: () => {
 
