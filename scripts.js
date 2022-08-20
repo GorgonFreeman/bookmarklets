@@ -555,6 +555,68 @@ const bookmarklets = [
     category: 4
   },
   {
+    title: 'Pizza Hut Form Filler J4',
+    script: () => {
+
+      // Pizza Hut Form Filler
+      const data = {
+        firstName: 'Julia',
+        lastName: 'Martin',
+        email: 'battalionloxley@gmail.com',
+        mobile: '0491952206',
+        'Re-enter Phone Number': '0491952206',
+        'Re-enter Phone': '0491952206',
+        'Re-enter Email': 'battalionloxley@gmail.com',
+      };
+
+      Object.entries(data).forEach(([k,v]) => {
+        try {
+          const input = document.querySelector(`[name="${ k }"]`);
+          input.value = v;
+          input.dispatchEvent(new Event('input'));  
+        } catch(err) {
+          console.warn(err);
+        }
+      });
+
+      document.querySelector('[id="T&C Agreement-agreement"]').click();
+    },
+    docs: false,
+    version: '1.1',
+    category: 4
+  },
+  {
+    title: 'Pizza Hut Form Filler J5',
+    script: () => {
+
+      // Pizza Hut Form Filler
+      const data = {
+        firstName: 'Redmond',
+        lastName: 'Martin',
+        email: 'oblongatrium+red@gmail.com',
+        mobile: '0401660386',
+        'Re-enter Phone Number': '0401660386',
+        'Re-enter Phone': '0401660386',
+        'Re-enter Email': 'oblongatrium+red@gmail.com',
+      };
+
+      Object.entries(data).forEach(([k,v]) => {
+        try {
+          const input = document.querySelector(`[name="${ k }"]`);
+          input.value = v;
+          input.dispatchEvent(new Event('input'));  
+        } catch(err) {
+          console.warn(err);
+        }
+      });
+
+      document.querySelector('[id="T&C Agreement-agreement"]').click();
+    },
+    docs: false,
+    version: '1.1',
+    category: 4
+  },
+  {
     title: 'Pizza Hut Form Filler S1',
     script: () => {
 
