@@ -805,6 +805,29 @@ const bookmarklets = [
     version: '1.0',
     category: 1
   },
+  {
+    title: 'Reddit Next Comment',
+    script: () => {
+      const firstLevelSpans = Array.from(document.querySelectorAll('span')).filter(
+        el => el.textContent === 'level 1'
+      );
+
+      window.index = window.index || 0;
+
+      const nextComment = firstLevelSpans[index];
+      const nextCommentTop = nextComment.getBoundingClientRect().top + window.pageYOffset - 60;
+
+      window.scrollTo({
+        top: nextCommentTop,
+        behavior: 'smooth',
+      });
+
+      index++;
+    },
+    docs: '',
+    version: '1.0',
+    category: 3
+  },
 ];
 
 /*
