@@ -781,7 +781,9 @@ const bookmarklets = [
         // Because -1 becomes 0, we can just use truthy
         const size = sizeOptionIndex ? capitaliseFirstLetter(variant[sizeOptionProp]) : '';
 
-        const price = `$${ variant.price }`;
+        const { compare_at_price: vcompare_at_price, price: vprice } = variant;
+
+        const price = `$${ vcompare_at_price ? vcompare_at_price : vprice }`;
 
         return [title, colour, size, price].join(separator);
       }
