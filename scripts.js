@@ -647,13 +647,13 @@ const bookmarklets = [
         document.body.removeChild(el);
       };
 
-      const handleize = str => str.toLowerCase().replace(/'/g, '').replace(/[^a-z0-9]+/g, '-').replace(/-$/, '').replace(/^-/, '');
+      const handleize = str => str.toLowerCase().replace(/'/g, '').replace(/[^a-z0-9&]+/g, '-').replace(/-$/, '').replace(/^-/, '');
 
       const input = prompt('Please enter the text you want to handleize:');
       copyToClipboard(handleize(input));
     },
     docs: '',
-    version: '0.1',
+    version: '0.2',
     category: 4
   },
 ];
