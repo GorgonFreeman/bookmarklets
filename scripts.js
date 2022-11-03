@@ -632,6 +632,30 @@ const bookmarklets = [
     version: '1.0',
     category: 1
   },
+  {
+    title: 'Handleize',
+    script: () => {
+      const copyToClipboard = str => {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      };
+
+      const handleize = str => str.toLowerCase().replace(/'/g, '').replace(/[^a-z0-9]+/g, '-').replace(/-$/, '').replace(/^-/, '');
+
+      const input = prompt('Please enter the text you want to handleize:');
+      copyToClipboard(handleize(input));
+    },
+    docs: '',
+    version: '0.1',
+    category: 4
+  },
 ];
 
 /*
@@ -647,11 +671,11 @@ const bookmarklets = [
 */
 
 const categories = [
-  'Super useful',
-  'Useful',
-  'Just for development',
-  'Very niche',
-  'Under construction',
+  'Super useful',         // 0
+  'Useful',               // 1
+  'Just for development', // 2
+  'Very niche',           // 3
+  'Under construction',   // 4
 ];
 
 const html = categories.map((c, index) => {
