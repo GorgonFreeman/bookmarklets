@@ -656,6 +656,49 @@ const bookmarklets = [
     version: '0.2',
     category: 4
   },
+  {
+    title: 'Check Event Data',
+    script: () => {
+      if (window.location.pathname.indexOf('/flash_sales/') === -1) {
+        alert(`Looks like you're not on a Launchpad event - go there to check the details.`);
+      }
+
+      try {
+        const el = (id) => {
+          return document.getElementById(id);
+        };
+
+        const startDate = el('sale_start_date');
+        const startHour = el('sale_start_time_hour');
+        const startMinute = el('sale_start_time_minute');
+        const startPeriod = el('sale_start_time_period');
+        const endDate = el('sale_end_date');
+        const endHour = el('sale_end_time_hour');
+        const endMinute = el('sale_end_time_minute');
+        const endPeriod = el('sale_end_time_period');
+        const saleTheme = el('sale_theme_id');
+        const nextTheme = el('sale_next_event_theme_id');
+        const themeSwitch = el('themeCheckbox');
+
+        const saleThemeName = saleTheme.querySelector(`option[value="${ saleTheme.value }"]`).text;
+
+        alert(`Sale starts: ${ new Date(`${ startDate.value } ${ startHour.value }:${ startMinute.value } ${ startPeriod.value }`).toLocaleString() }
+        Sale ends: ${ new Date(`${ endDate.value } ${ endHour.value }:${ endMinute.value } ${ endPeriod.value }`).toLocaleString() }
+        Sale theme: ${ saleTheme.querySelector(`option[value="${ saleTheme.value }"]`).text }`);
+
+        if (themeSwitch.checked === false || saleThemeName.indexOf('(active)') !== -1) {
+          alert('ISSUE: Theme will not change during sale.');
+        }
+        
+      } catch(err) {
+        console.error(err);
+        alert(err);
+      }
+    },
+    docs: '',
+    version: '0.1',
+    category: 4
+  },
 ];
 
 /*
