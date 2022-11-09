@@ -281,7 +281,14 @@ const bookmarklets = [
   {
     title: 'JSON to CSV',
     script: () => {
-      let arr = JSON.parse(prompt('Paste your array of JSON objects here:'));
+
+      // ^['"] Regex for first character if quote
+      // ['"]$ Regex for last character if quote
+      const sanitise = input => {
+        return input.replace(/^['"]/, '').replace(/['"]$/, '');
+      };
+
+      let arr = JSON.parse(sanitise(prompt('Paste your array of JSON objects here:')));
       console.log('Data', arr);
 
       const cols = arr.map(item => Object.keys(item))
@@ -312,7 +319,7 @@ const bookmarklets = [
       }
     },
     docs: 'https://gist.github.com/GorgonFreeman/d174e3365c126363e6c401a8bd2a31f3',
-    version: '1.0',
+    version: '1.1',
     category: 2
   },
   {
