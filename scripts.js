@@ -282,10 +282,10 @@ const bookmarklets = [
     title: 'JSON to CSV',
     script: () => {
 
-      // ^['"] Regex for first character if quote
-      // ['"]$ Regex for last character if quote
+      // ^['"`] Regex for first character if quote
+      // ['"`]$ Regex for last character if quote
       const sanitise = input => {
-        return input.replace(/^['"]/, '').replace(/['"]$/, '');
+        return input.replace(/^['"`]/, '').replace(/['"`]$/, '');
       };
 
       let arr = JSON.parse(sanitise(prompt('Paste your array of JSON objects here:')));
