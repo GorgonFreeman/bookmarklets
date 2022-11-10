@@ -318,7 +318,7 @@ const bookmarklets = [
         document.body.removeChild(el);
       }
 
-      download(csvContent);
+      download('enjoy_your_csv.csv', csvContent);
     },
     docs: 'https://gist.github.com/GorgonFreeman/d174e3365c126363e6c401a8bd2a31f3',
     version: '1.1',
