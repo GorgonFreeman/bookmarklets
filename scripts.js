@@ -718,6 +718,76 @@ const bookmarklets = [
     version: '1.0',
     category: 1
   },
+  {
+    title: 'AU/US Region Switcher: Products',
+    script: () => {
+      const { origin, pathname } = window.location;
+
+      const AU_STORE = 'https://white-fox-boutique-aus.myshopify.com';
+      const US_STORE = 'https://white-fox-boutique-usa.myshopify.com';
+
+      const creds = {
+        au: {
+          STORE_URL: 'https://white-fox-boutique-aus.myshopify.com',
+        },
+        us: {
+          STORE_URL: 'https://white-fox-boutique-usa.myshopify.com',
+        },
+      }
+
+      const fromRegion = Object.entries(creds).find(([k,v]) => v.STORE_URL === origin)[1];
+      const toRegion = Object.entries(creds).find(([k,v]) => v.STORE_URL !== origin)[1];
+
+      let productID, variantID;
+
+      try {
+        productID = pathname.split('/products/')[1].split('/')[0];  
+      } catch(err) {
+        alert('Not on a product in the admin');
+      }
+
+      try {
+        variantID = pathname.split('/variants/')[1].split('/')[0];
+      } catch(err) {
+        console.log('No variant');
+      }
+
+      const getFromProductData = async () => {
+        const url = `${ fromRegion.STORE_URL }/admin/products/${ productID }.json`;
+        return await fetch(url).then(res => res.json()).then(data => data.product);
+      }
+
+      const fromProductData = await getFromProductData();
+      const { handle } = fromProductData;
+
+      const getToProductData = async (handle) => {
+        const url = `${ toRegion.STORE_URL }/products/${ handle }.json`;
+        return await fetch(url).then(res => res.json()).then(data => data.product);
+      }
+
+      const toProductData = await getToProductData(handle);
+
+      const { id: pID } = toProductData;
+
+      let vID;
+      if (variantID) {
+        console.log(variantID);
+        const fromV = fromProductData.variants.find(v => v.id == variantID);
+        const { title: vTitle } = fromV;  
+        const toV = toProductData.variants.find(v => v.title === vTitle);
+        console.log(toV);
+        vID = toV.id;
+        console.log(vID);
+      }
+
+      const toProductAdminURL = `${ toRegion.STORE_URL }/admin/products/${ pID }${ vID ? `/variants/${ vID }` : '' }`;
+
+      window.open(toProductAdminURL, '_self');
+    },
+    docs: '',
+    version: '1.0',
+    category: 1
+  },
 ];
 
 /*
