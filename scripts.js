@@ -721,6 +721,11 @@ const bookmarklets = [
   {
     title: 'AU/US Region Switcher: Products',
     script: () => {
+
+      (async () => {
+      try {
+
+
       const { origin, pathname } = window.location;
 
       const AU_STORE = 'https://white-fox-boutique-aus.myshopify.com';
@@ -783,6 +788,13 @@ const bookmarklets = [
       const toProductAdminURL = `${ toRegion.STORE_URL }/admin/products/${ pID }${ vID ? `/variants/${ vID }` : '' }`;
 
       window.open(toProductAdminURL, '_self');
+
+
+
+      } catch(err) {
+        console.error(err);
+      }
+      })();
     },
     docs: '',
     version: '1.0',
