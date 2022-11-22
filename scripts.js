@@ -787,7 +787,7 @@ const bookmarklets = [
 
       const toProductAdminURL = `${ toRegion.STORE_URL }/admin/products/${ pID }${ vID ? `/variants/${ vID }` : '' }`;
 
-      window.open(toProductAdminURL, '_self');
+      window.open(toProductAdminURL);
 
 
 
