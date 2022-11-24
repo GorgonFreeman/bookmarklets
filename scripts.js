@@ -711,11 +711,14 @@ const bookmarklets = [
   {
     title: 'Download Current Google Sheet',
     script: () => {
+      if (window.location.hostname !== 'docs.google.com') {
+        alert(`I don't think you're on a Google Sheet?`);
+      }
       const downloadSheetURL = window.location.href.replace('edit#', 'export?format=csv&');
-      window.open(downloadSheetURL);
+      window.open(downloadSheetURL, '_self');
     },
     docs: '',
-    version: '1.0',
+    version: '1.5',
     category: 1
   },
   {
