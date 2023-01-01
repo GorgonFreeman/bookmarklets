@@ -803,6 +803,37 @@ const bookmarklets = [
     version: '1.0',
     category: 1
   },
+  {
+    title: 'ASOS Order Info',
+    script: () => {
+      function copyToClipboard(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      };
+
+      const items = document.querySelectorAll('[data-auto-id="ItemSummaries"] > *');
+
+      const itemsData = Array.from(items).map(item => {
+        const name = item.querySelector('[data-auto-id="product-name"]').textContent;
+        const price = item.querySelector('._2CxOL9PfSZNr6D56HYIQH9').textContent.replace('$', '');
+        const colour = item.querySelector('._2qIKNi8zwcN4EZ7cEJ3G6 > div:nth-child(2)').textContent;
+        const size = item.querySelector('._2qIKNi8zwcN4EZ7cEJ3G6 > div:nth-child(3)').textContent;
+        return [`${ colour } ${ size } ${ name }`, price].join(',');
+      });
+
+      copyToClipboard(itemsData.join('\n'));
+    },
+    docs: '',
+    version: '0.9',
+    category: 4
+  },
 ];
 
 /*
