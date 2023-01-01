@@ -834,6 +834,37 @@ const bookmarklets = [
     version: '0.9',
     category: 4
   },
+  {
+    title: 'DoorDash Order Info',
+    script: () => {
+      function copyToClipboard(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      };
+
+      const items = document.querySelectorAll('.sc-gWDJhD.ljELnR > *');
+
+      const itemsData = Array.from(items).map(item => {
+        const title = item.dataset.testid.split('-')[0];
+        const qty = item.querySelector('.sc-bIaGFe.hbJylf').textContent;
+        const price = item.querySelector('.hmcLQR.sc-fUCuFg.gWBpXS').textContent;
+        
+        return ['', '', title, qty, price].join(',');
+      });
+
+      copyToClipboard(itemsData.join('\n'));
+    },
+    docs: '',
+    version: '0.2',
+    category: 4
+  },
 ];
 
 /*
