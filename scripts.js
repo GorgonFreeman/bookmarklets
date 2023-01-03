@@ -854,7 +854,8 @@ const bookmarklets = [
       const itemsData = Array.from(items).map(item => {
         const title = item.dataset.testid.split('-')[0];
         const qty = item.querySelector('.sc-bIaGFe.hbJylf').textContent;
-        const price = item.querySelector('.hmcLQR.sc-fUCuFg.gWBpXS').textContent;
+        const priceEl = item.querySelector('.hmcLQR.sc-fUCuFg.gWBpXS');
+        const price = priceEl ? priceEl.textContent.replace('$', '') : '';
         
         return ['', '', title, qty, price].join(',');
       });
