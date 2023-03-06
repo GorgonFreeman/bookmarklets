@@ -870,10 +870,14 @@ const bookmarklets = [
     title: 'Remove Blocking Popup',
     script: () => {
       document.addEventListener('click', e => { e.target.remove(); });
-      Array.from(document.querySelectorAll('html, body')).forEach(el => el.style.overflow = '');
+
+      const styles = '<style>.o_flo { overflow: auto !important; }</style>';
+      document.head.innerHTML += styles;
+
+      Array.from(document.querySelectorAll('html, body')).forEach(el => el.classList.add('o_flo'));
     },
     docs: '',
-    version: '1.0',
+    version: '1.1',
     category: 1
   }
 ];
