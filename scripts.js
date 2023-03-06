@@ -866,6 +866,16 @@ const bookmarklets = [
     version: '0.2',
     category: 4
   },
+  {
+    title: 'Remove Blocking Popup',
+    script: () => {
+      document.addEventListener('click', e => { e.target.remove(); });
+      Array.from(document.querySelectorAll('html, body')).forEach(el => el.style.overflow = '');
+    },
+    docs: '',
+    version: '1.0',
+    category: 1
+  }
 ];
 
 /*
