@@ -770,10 +770,23 @@ const bookmarklets = [
 
       const getToProductData = async (handle) => {
         const url = `${ toRegion.STORE_URL }/products/${ handle }.json`;
-        return await fetch(url).then(res => res.json()).then(data => data.product);
+        let getToProductResult = await fetch(url);
+        try {
+          getToProductResult = await getToProductResult.json();
+        } catch(err) {
+          console.warn(err);
+          return null;
+        }
+        const product = getToProductResult?.data?.product;
+        return product;
       }
 
       const toProductData = await getToProductData(handle);
+      if (!toProductData) {
+        const toSearchURL = `${ toRegion.STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
+        window.open(toSearchURL);
+        return;
+      }
 
       const { id: pID } = toProductData;
 
@@ -800,7 +813,7 @@ const bookmarklets = [
       })();
     },
     docs: 'https://gist.github.com/GorgonFreeman/b6339f408aaad4459110f04dcd594d52',
-    version: '1.0',
+    version: '1.1',
     category: 1
   },
   {
