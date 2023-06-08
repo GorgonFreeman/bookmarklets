@@ -760,9 +760,34 @@ const bookmarklets = [
         console.log('No variant');
       }
 
+
+      const fetchAndReturn = async (url, transformer, errorCallback) => {
+        // transformer: How to mutate the data before returning
+        // errorCallback: What to do if any error occurs
+
+        const res = await fetch(url).catch(err => {
+          console.log(err);
+          errorCallback();
+          return false;
+        });
+
+        const body = await res.json().catch(err => {
+          console.log(err);
+          errorCallback();
+          return false;
+        });
+
+        if (res.status === 303) {
+          window.open(body.location);
+          return false;
+        }
+
+        return await transformer(body);
+      }
+
       const getFromProductData = async () => {
         const url = `${ fromRegion.STORE_URL }/admin/products/${ productID }.json`;
-        return await fetch(url).then(res => res.json()).then(data => data.product);
+        return await fetchAndReturn(url, (data) => data.product, alert('Error getting "from" product data'));
       }
 
       const fromProductData = await getFromProductData();
@@ -770,7 +795,10 @@ const bookmarklets = [
 
       const getToProductData = async (handle) => {
         const url = `${ toRegion.STORE_URL }/products/${ handle }.json`;
-        return await fetch(url).then(res => res.json()).then(data => data.product);
+        return await fetchAndReturn(url, (data) => data.product, () => {
+          const toSearchURL = `${ toRegion.STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
+          window.open(toSearchURL);
+        });
       }
 
       let toProductData;
