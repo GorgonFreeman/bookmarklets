@@ -288,18 +288,33 @@ const bookmarklets = [
         return input.replace(/^['"`]/, '').replace(/['"`]$/, '');
       };
 
+      const dblQuoteEncasedRegex = new RegExp('^".*"$');
+      const preserveCommas = input => {
+        // Double-quote any values containing a comma
+        // unless already double-quoted
+        try {
+          if (input.indexOf(',') && !dblQuoteEncasedRegex.test(input)) {
+            return `"${ input }"`;
+          }
+          return input;
+        } catch(err) {
+          // Lazy way of handling non-string values
+          return input;
+        }
+      };
+
       let arr = JSON.parse(sanitise(prompt('Paste your array of JSON objects here:')));
       console.log('Data', arr);
+      const inputAsArr = Array.isArray(arr) ? arr : [arr];
 
-      const cols = arr.map(item => Object.keys(item))
+      const cols = inputAsArr.map(item => Object.keys(item).map(val => preserveCommas(val)))
         .flat()
         // Make keys unique
         .filter((value, index, self) => {
           return self.indexOf(value) === index;
         })
-        .join(',');
-
-      const rows = arr.map(item => Object.values(item).join(','));
+        .join(',');      
+      const rows = inputAsArr.map(item => Object.values(item).map(val => preserveCommas(val)).join(','));
       console.log('Cols', cols);
       console.log('Rows', rows);
 
@@ -321,7 +336,7 @@ const bookmarklets = [
       download('enjoy_your_csv.csv', csvContent);
     },
     docs: 'https://gist.github.com/GorgonFreeman/d174e3365c126363e6c401a8bd2a31f3',
-    version: '1.1',
+    version: '1.2',
     category: 2
   },
   {
