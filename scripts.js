@@ -808,7 +808,7 @@ const bookmarklets = [
 
       const getFromProductData = async () => {
         const url = `${ fromRegion.STORE_URL }/admin/products/${ productID }.json`;
-        return await fetchAndReturn(url, (data) => data.product, alert('Error getting "from" product data'));
+        return await fetchAndReturn(url, (data) => data.product, () => alert('Error getting "from" product data'));
       }
 
       const fromProductData = await getFromProductData();
@@ -863,7 +863,7 @@ const bookmarklets = [
       })();
     },
     docs: 'https://gist.github.com/GorgonFreeman/b6339f408aaad4459110f04dcd594d52',
-    version: '1.2',
+    version: '1.3',
     category: 1
   },
   {
