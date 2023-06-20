@@ -786,12 +786,18 @@ const bookmarklets = [
           return false;
         });
 
+        if (res.redirected) {
+          window.open(res.url);
+          return false;
+        }
+
         const body = await res.json().catch(err => {
           console.log(err);
           errorCallback();
           return false;
         });
 
+        // I don't think this is working.
         if (res.status === 303) {
           window.open(body.location);
           return false;
