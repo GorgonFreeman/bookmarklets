@@ -942,7 +942,31 @@ const bookmarklets = [
     docs: '',
     version: '1.2',
     category: 1
-  }
+  },
+  {
+    title: 'Lines > Array',
+    script: () => {
+      function copyToClipboard(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      };
+
+      const input = prompt('Paste your text in here, and a stringified array will be copied to your clipboard.');
+      const linesArray = input.split('\n').filter(item => item);
+
+      copyToClipboard(JSON.stringify(linesArray));
+    },
+    docs: '',
+    version: '1.0',
+    category: 2
+  },
 ];
 
 /*
