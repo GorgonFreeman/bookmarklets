@@ -967,6 +967,36 @@ const bookmarklets = [
     version: '1.0',
     category: 2
   },
+  {
+    title: 'Lines > First Words',
+    script: () => {
+      const extractFirstWords = text => {
+        const lines = text.split('\n');
+        const firstWords = lines.map(line => line.trim().split(' ')[0]);
+        return firstWords;
+      }
+
+      function copyToClipboard(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      };
+
+      const input = prompt('Paste your data. This bookmarklet will return an array of the first words of each line.');
+      const linesArray = extractFirstWords(input).filter(item => item);
+
+      copyToClipboard(JSON.stringify(linesArray));
+    },
+    docs: '',
+    version: '1.0',
+    category: 3
+  },
 ];
 
 /*
