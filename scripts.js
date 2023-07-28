@@ -744,6 +744,49 @@ const bookmarklets = [
       try {
 
 
+        const getURLTrunkAndBranch = windowLocation => {
+          try {
+            const legacyTrunks = ['https://white-fox-boutique-aus.myshopify.com', 'https://white-fox-boutique-usa.myshopify.com'];
+            const newTrunks = ['https://admin.shopify.com/store/white-fox-boutique-aus', 'https://admin.shopify.com/store/white-fox-boutique-usa'];
+
+            const regionFlags = {
+              au: 'white-fox-boutique-aus',
+              us: 'white-fox-boutique-usa',
+            };
+
+            const { href, origin, pathname } = windowLocation;
+            const baseURL = `${ origin }${ pathname }`;
+
+            const [region, correctRegionFlag] = Object.entries(regionFlags).find(([r, flag]) => baseURL.indexOf(flag) !== -1);
+            console.log(region, correctRegionFlag);
+
+            let trunk, branch;
+            if (legacyTrunks.some(t => baseURL.indexOf(t) !== -1)) {
+              // Legacy format
+              ({ origin: trunk, pathname: branch } = windowLocation);
+              console.log(trunk, branch, windowLocation);
+            } else if (newTrunks.some(t => baseURL.indexOf(t) !== -1)) {
+              // New format
+              [trunk, branch] = baseURL.split(correctRegionFlag);
+              trunk = `${ trunk }${ correctRegionFlag }`;
+              console.log(trunk, branch, baseURL.split(correctRegionFlag));
+            }
+            console.log(trunk, branch);
+
+            return {
+              trunk,
+              branch,
+              region,
+            };
+          } catch(err) {
+            alert('Are you on a Shopify admin page?');
+            throw err;
+          }
+        }
+
+        const { trunk, branch, region } = getURLTrunkAndBranch(window.location);
+
+
       const { origin, pathname } = window.location;
 
       const AU_STORE = 'https://white-fox-boutique-aus.myshopify.com';
