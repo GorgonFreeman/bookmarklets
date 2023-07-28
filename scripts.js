@@ -746,9 +746,11 @@ const bookmarklets = [
       const creds = {
         au: {
           STORE_URL: 'https://white-fox-boutique-aus.myshopify.com',
+          API_KEY: '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',
         },
         us: {
           STORE_URL: 'https://white-fox-boutique-usa.myshopify.com',
+          API_KEY: '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',
         },
       };
 
@@ -756,7 +758,6 @@ const bookmarklets = [
         au: 'white-fox-boutique-aus',
         us: 'white-fox-boutique-usa',
       };
-
 
       const getURLTrunkAndBranch = windowLocation => {
         try {
@@ -812,7 +813,7 @@ const bookmarklets = [
         console.log('No variant');
       }
 
-      const fetchAndReturn = async (url, transformer, errorCallback) => {
+      const fetchAndReturn = async (url, transformer, errorCallback, fetchConfig) => {
         // transformer: How to mutate the data before returning
         // errorCallback: What to do if any error occurs
 
@@ -842,20 +843,35 @@ const bookmarklets = [
         return await transformer(body);
       }
 
+      const { STORE_URL: FROM_STORE_URL, API_KEY: FROM_API_KEY } = creds[fromRegion];
+      const { STORE_URL: TO_STORE_URL, API_KEY: TO_API_KEY } = creds[toRegion];
+      const fromFetchConfig = {
+        method: 'get',
+        headers: {
+          'X-Shopify-Access-Token': FROM_API_KEY,
+        },
+      };
+      const toFetchConfig = {
+        method: 'get',
+        headers: {
+          'X-Shopify-Access-Token': TO_API_KEY,
+        },
+      };
+
       const getFromProductData = async () => {
-        const url = `${ creds[fromRegion].STORE_URL }/admin/products/${ productID }.json`;
-        return await fetchAndReturn(url, (data) => data.product, () => alert('Error getting "from" product data'));
+        const url = `${ creds[fromRegion].STORE_URL }/admin/api/2023-07/products/${ productID }.json`;
+        return await fetchAndReturn(url, (data) => data.product, () => alert('Error getting "from" product data'), fromFetchConfig);
       }
 
       const fromProductData = await getFromProductData();
       const { handle } = fromProductData;
 
       const getToProductData = async (handle) => {
-        const url = `${ creds[toRegion].STORE_URL }/products/${ handle }.json`;
+        const url = `${ creds[toRegion].STORE_URL }/products.json?handle=${ handle }`;
         return await fetchAndReturn(url, (data) => data.product, () => {
           const toSearchURL = `${ creds[toRegion].STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
           window.open(toSearchURL);
-        });
+        }, toFetchConfig);
       }
 
       let toProductData;
