@@ -743,55 +743,6 @@ const bookmarklets = [
       (async () => {
       try {
 
-
-        const getURLTrunkAndBranch = windowLocation => {
-          try {
-            const legacyTrunks = ['https://white-fox-boutique-aus.myshopify.com', 'https://white-fox-boutique-usa.myshopify.com'];
-            const newTrunks = ['https://admin.shopify.com/store/white-fox-boutique-aus', 'https://admin.shopify.com/store/white-fox-boutique-usa'];
-
-            const regionFlags = {
-              au: 'white-fox-boutique-aus',
-              us: 'white-fox-boutique-usa',
-            };
-
-            const { href, origin, pathname } = windowLocation;
-            const baseURL = `${ origin }${ pathname }`;
-
-            const [region, correctRegionFlag] = Object.entries(regionFlags).find(([r, flag]) => baseURL.indexOf(flag) !== -1);
-            console.log(region, correctRegionFlag);
-
-            let trunk, branch;
-            if (legacyTrunks.some(t => baseURL.indexOf(t) !== -1)) {
-              // Legacy format
-              ({ origin: trunk, pathname: branch } = windowLocation);
-              console.log(trunk, branch, windowLocation);
-            } else if (newTrunks.some(t => baseURL.indexOf(t) !== -1)) {
-              // New format
-              [trunk, branch] = baseURL.split(correctRegionFlag);
-              trunk = `${ trunk }${ correctRegionFlag }`;
-              console.log(trunk, branch, baseURL.split(correctRegionFlag));
-            }
-            console.log(trunk, branch);
-
-            return {
-              trunk,
-              branch,
-              region,
-            };
-          } catch(err) {
-            alert('Are you on a Shopify admin page?');
-            throw err;
-          }
-        }
-
-        const { trunk, branch, region } = getURLTrunkAndBranch(window.location);
-
-
-      const { origin, pathname } = window.location;
-
-      const AU_STORE = 'https://white-fox-boutique-aus.myshopify.com';
-      const US_STORE = 'https://white-fox-boutique-usa.myshopify.com';
-
       const creds = {
         au: {
           STORE_URL: 'https://white-fox-boutique-aus.myshopify.com',
@@ -799,25 +750,67 @@ const bookmarklets = [
         us: {
           STORE_URL: 'https://white-fox-boutique-usa.myshopify.com',
         },
+      };
+
+      const regionFlags = {
+        au: 'white-fox-boutique-aus',
+        us: 'white-fox-boutique-usa',
+      };
+
+
+      const getURLTrunkAndBranch = windowLocation => {
+        try {
+          const legacyTrunks = ['https://white-fox-boutique-aus.myshopify.com', 'https://white-fox-boutique-usa.myshopify.com'];
+          const newTrunks = ['https://admin.shopify.com/store/white-fox-boutique-aus', 'https://admin.shopify.com/store/white-fox-boutique-usa'];
+
+          const { href, origin, pathname } = windowLocation;
+          const baseURL = `${ origin }${ pathname }`;
+
+          const [region, correctRegionFlag] = Object.entries(regionFlags).find(([r, flag]) => baseURL.indexOf(flag) !== -1);
+          console.log(region, correctRegionFlag);
+
+          let trunk, branch;
+          if (legacyTrunks.some(t => baseURL.indexOf(t) !== -1)) {
+            // Legacy format
+            ({ origin: trunk, pathname: branch } = windowLocation);
+            console.log(trunk, branch, windowLocation);
+          } else if (newTrunks.some(t => baseURL.indexOf(t) !== -1)) {
+            // New format
+            [trunk, branch] = baseURL.split(correctRegionFlag);
+            trunk = `${ trunk }${ correctRegionFlag }`;
+            console.log(trunk, branch, baseURL.split(correctRegionFlag));
+          }
+          console.log(trunk, branch);
+
+          return {
+            trunk,
+            branch,
+            region,
+          };
+        } catch(err) {
+          alert('Are you on a Shopify admin page?');
+          throw err;
+        }
       }
 
-      const fromRegion = Object.entries(creds).find(([k,v]) => v.STORE_URL === origin)[1];
-      const toRegion = Object.entries(creds).find(([k,v]) => v.STORE_URL !== origin)[1];
+      const { trunk, branch, region } = getURLTrunkAndBranch(window.location);
+
+      const fromRegion = region;
+      const toRegion = Object.keys(regionFlags).find(key => key !== region);
 
       let productID, variantID;
 
       try {
-        productID = pathname.split('/products/')[1].split('/')[0];  
+        productID = branch.split('/products/')[1].split('/')[0];  
       } catch(err) {
         alert('Not on a product in the admin');
       }
 
       try {
-        variantID = pathname.split('/variants/')[1].split('/')[0];
+        variantID = branch.split('/variants/')[1].split('/')[0];
       } catch(err) {
         console.log('No variant');
       }
-
 
       const fetchAndReturn = async (url, transformer, errorCallback) => {
         // transformer: How to mutate the data before returning
@@ -850,7 +843,7 @@ const bookmarklets = [
       }
 
       const getFromProductData = async () => {
-        const url = `${ fromRegion.STORE_URL }/admin/products/${ productID }.json`;
+        const url = `${ creds[fromRegion].STORE_URL }/admin/products/${ productID }.json`;
         return await fetchAndReturn(url, (data) => data.product, () => alert('Error getting "from" product data'));
       }
 
@@ -858,9 +851,9 @@ const bookmarklets = [
       const { handle } = fromProductData;
 
       const getToProductData = async (handle) => {
-        const url = `${ toRegion.STORE_URL }/products/${ handle }.json`;
+        const url = `${ creds[toRegion].STORE_URL }/products/${ handle }.json`;
         return await fetchAndReturn(url, (data) => data.product, () => {
-          const toSearchURL = `${ toRegion.STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
+          const toSearchURL = `${ creds[toRegion].STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
           window.open(toSearchURL);
         });
       }
@@ -871,7 +864,7 @@ const bookmarklets = [
         try {
           toProductData = await getToProductData(handle);
         } catch(err) {
-          const toSearchURL = `${ toRegion.STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
+          const toSearchURL = `${ creds[toRegion].STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
           window.open(toSearchURL);
           return;
         }
@@ -894,7 +887,7 @@ const bookmarklets = [
         console.log(vID);
       }
 
-      const toProductAdminURL = `${ toRegion.STORE_URL }/admin/products/${ pID }${ vID ? `/variants/${ vID }` : '' }`;
+      const toProductAdminURL = `${ creds[toRegion].STORE_URL }/admin/products/${ pID }${ vID ? `/variants/${ vID }` : '' }`;
 
       window.open(toProductAdminURL);
 
@@ -906,7 +899,7 @@ const bookmarklets = [
       })();
     },
     docs: 'https://gist.github.com/GorgonFreeman/b6339f408aaad4459110f04dcd594d52',
-    version: '1.3',
+    version: '2.0',
     category: 1
   },
   {
