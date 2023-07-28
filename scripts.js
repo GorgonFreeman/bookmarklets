@@ -746,11 +746,9 @@ const bookmarklets = [
       const creds = {
         au: {
           STORE_URL: 'https://white-fox-boutique-aus.myshopify.com',
-          API_KEY: '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',
         },
         us: {
           STORE_URL: 'https://white-fox-boutique-usa.myshopify.com',
-          API_KEY: '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',
         },
       };
 
@@ -813,101 +811,10 @@ const bookmarklets = [
         console.log('No variant');
       }
 
-      const fetchAndReturn = async (url, transformer, errorCallback, fetchConfig) => {
-        // transformer: How to mutate the data before returning
-        // errorCallback: What to do if any error occurs
-
-        const res = await fetch(url).catch(err => {
-          console.log(err);
-          errorCallback();
-          return false;
-        });
-
-        if (res.redirected) {
-          window.open(res.url);
-          return false;
-        }
-
-        const body = await res.json().catch(err => {
-          console.log(err);
-          errorCallback();
-          return false;
-        });
-
-        // I don't think this is working.
-        if (res.status === 303) {
-          window.open(body.location);
-          return false;
-        }
-
-        return await transformer(body);
-      }
-
-      const { STORE_URL: FROM_STORE_URL, API_KEY: FROM_API_KEY } = creds[fromRegion];
-      const { STORE_URL: TO_STORE_URL, API_KEY: TO_API_KEY } = creds[toRegion];
-      const fromFetchConfig = {
-        method: 'get',
-        headers: {
-          'X-Shopify-Access-Token': FROM_API_KEY,
-        },
-      };
-      const toFetchConfig = {
-        method: 'get',
-        headers: {
-          'X-Shopify-Access-Token': TO_API_KEY,
-        },
-      };
-
-      const getFromProductData = async () => {
-        const url = `${ creds[fromRegion].STORE_URL }/admin/api/2023-07/products/${ productID }.json`;
-        return await fetchAndReturn(url, (data) => data.product, () => alert('Error getting "from" product data'), fromFetchConfig);
-      }
-
-      const fromProductData = await getFromProductData();
-      const { handle } = fromProductData;
-
-      const getToProductData = async (handle) => {
-        const url = `${ creds[toRegion].STORE_URL }/products.json?handle=${ handle }`;
-        return await fetchAndReturn(url, (data) => data.product, () => {
-          const toSearchURL = `${ creds[toRegion].STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
-          window.open(toSearchURL);
-        }, toFetchConfig);
-      }
-
-      let toProductData;
-
-      await (async () => { 
-        try {
-          toProductData = await getToProductData(handle);
-        } catch(err) {
-          const toSearchURL = `${ creds[toRegion].STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
-          window.open(toSearchURL);
-          return;
-        }
-      })();
-
-      if (!toProductData) {
-        return;
-      }
-
-      const { id: pID } = toProductData;
-
-      let vID;
-      if (variantID) {
-        console.log(variantID);
-        const fromV = fromProductData.variants.find(v => v.id == variantID);
-        const { title: vTitle } = fromV;  
-        const toV = toProductData.variants.find(v => v.title === vTitle);
-        console.log(toV);
-        vID = toV.id;
-        console.log(vID);
-      }
-
-      const toProductAdminURL = `${ creds[toRegion].STORE_URL }/admin/products/${ pID }${ vID ? `/variants/${ vID }` : '' }`;
-
-      window.open(toProductAdminURL);
-
-
+      const viewButton = document.querySelector('a[href*="whitefoxboutique.com"][href*="/products/"]');
+      const handle = viewButton.href.split('/products/').pop();
+      const toSearchURL = `${ creds[toRegion].STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
+      window.open(toSearchURL);
 
       } catch(err) {
         console.error(err);
@@ -915,7 +822,7 @@ const bookmarklets = [
       })();
     },
     docs: 'https://gist.github.com/GorgonFreeman/b6339f408aaad4459110f04dcd594d52',
-    version: '2.0',
+    version: '3.0',
     category: 1
   },
   {
