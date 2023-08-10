@@ -996,6 +996,36 @@ const bookmarklets = [
     docs: '',
     version: '1.0',
     category: 5
+  },
+  {
+    title: 'Run Inventory Check',
+    script: () => {
+      (async () => {
+        const shouldProceed = confirm(`Look out for a Slack message in foxtron_fetch. If you don't have one after 15 minutes, something may have gone wrong. It usually takes 10 minutes to run.\n\nTo run the inventory check, press OK.`);
+        // confirm returns true/false
+        if (!shouldProceed) {
+          console.log('shouldProceed', shouldProceed);
+          return;
+        }
+        
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffRunInventoryCheck', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            full: true,
+          }),
+        });
+        
+        const data = await result.json();
+        console.log(data);
+        alert('The inventory check is complete - look for a message in Slack.');
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5
   }
 ];
 
