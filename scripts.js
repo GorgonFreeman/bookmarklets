@@ -956,6 +956,47 @@ const bookmarklets = [
     version: '1.0',
     category: 3
   },
+  {
+    title: 'SKU Filler',
+    script: () => {
+      (async () => {
+        const copyToClipboard = str => {
+          const el = document.createElement('textarea');
+          el.value = str;
+          el.setAttribute('readonly', '');
+          el.style.position = 'absolute';
+          el.style.left = '-9999px';
+          document.body.appendChild(el);
+          el.select();
+          document.execCommand('copy');
+          document.body.removeChild(el);
+        };
+
+        const partialsLines = prompt('Partials, one per line:');
+        const partialsArray = partialsLines.split('\n').filter(item => item);
+
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffSKUFiller', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            partialSKUs: partialsArray,
+          }),
+        });
+        const data = await result.json();
+        console.log(data);
+
+        const fullSKUsArray = data;
+        const fullSKUsLines = data.join('\n');
+        copyToClipboard(fullSKUsLines);
+        alert(`The full SKUs have been copied to your clipboard. Just in case, here they are:\n${ fullSKUsLines }`);
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5
+  }
 ];
 
 /*
@@ -976,6 +1017,7 @@ const categories = [
   'Just for development', // 2
   'Very niche',           // 3
   'Under construction',   // 4
+  'Fox Functions',        // 5
 ];
 
 const html = categories.map((c, index) => {
