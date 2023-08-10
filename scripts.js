@@ -1026,6 +1026,34 @@ const bookmarklets = [
     docs: '',
     version: '1.0',
     category: 5
+  },
+  {
+    title: 'Sync Blank Orders',
+    script: () => {
+      (async () => {
+        const idsLines = prompt('Order IDs, one per line:');
+        const idsArray = idsLines.split('\n').filter(item => item);
+        
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffSyncBlankOrders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            ids: idsArray,
+          }),
+        });
+        
+        const data = await result.json();
+        console.log(data);
+
+        // TO DO: Success and error reporting
+        alert('All of your orders have been synced - check if there are still any blank orders remaining.');
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5
   }
 ];
 
