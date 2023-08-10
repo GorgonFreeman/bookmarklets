@@ -990,7 +990,7 @@ const bookmarklets = [
         const fullSKUsArray = data;
         const fullSKUsLines = data.join('\n');
         copyToClipboard(fullSKUsLines);
-        alert(`The full SKUs have been copied to your clipboard. Just in case, here they are:\n${ fullSKUsLines }`);
+        setTimeout(alert(`The full SKUs have been copied to your clipboard. Just in case, here they are:\n${ fullSKUsLines }`), 1500);
       })();
     },
     docs: '',
