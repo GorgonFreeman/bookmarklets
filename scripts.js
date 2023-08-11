@@ -1054,6 +1054,41 @@ const bookmarklets = [
     docs: '',
     version: '1.0',
     category: 5
+  },
+  {
+    title: 'Sync Inventory PVX > Shopify',
+    script: () => {
+      (async () => {
+        const shouldProceed = confirm(`Do you have a list of complete SKUs? If you only have partials, use SKU Filler first. Otherwise, click OK.`);
+        if (!shouldProceed) {
+          return;
+        }
+
+        alert(`After these prompts are complete, you will get a Slack message in foxtron_fetch with links to your upload sheets and locations. This should not take more than 10 minutes.`);
+
+        const skusLines = prompt('Enter the SKUs you want to sync inventory for, one per line:');
+        const skusArray = skusLines.split('\n').filter(item => item);
+        
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffSyncInventoryFromPVXtoShopify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            skus: skusArray,
+          }),
+        });
+        
+        const data = await result.json();
+        console.log(data);
+
+        // TO DO: Success and error reporting
+        alert(`Your inventory sheets should be in foxtron_fetch.`);
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5
   }
 ];
 
