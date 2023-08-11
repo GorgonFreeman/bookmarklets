@@ -1109,6 +1109,26 @@ const bookmarklets = [
     docs: '',
     version: '1.0',
     category: 5
+  },
+  {
+    title: 'Populate PVX MIDs',
+    script: () => {
+      (async () => {
+        const shouldProceed = confirm(`When you press OK, all items in PVX with no Attribute 7 (MID) and no Attribute 6 (Country of Origin) will be edited with an MID, and a Country of Origin = China`);
+        if (!shouldProceed) {
+          return;
+        }
+        
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffPopulatePVXMIDs');
+        const data = await result.json();
+        console.log(data);
+
+        alert(`Done!`);
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5
   }
 ];
 
