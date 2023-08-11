@@ -1028,6 +1028,26 @@ const bookmarklets = [
     category: 5
   },
   {
+    title: 'Sync Missed Orders',
+    script: () => {
+      (async () => {
+        const shouldProceed = confirm(`You're about to find and automatically sync all missed orders on AU, US and Baddest.\n\nIf this is a peak sale period, there may be way too many to sync, and it may time out, so wait until after the peak to do this.\n\nAfter running this sync, run it again - orders can go missing while the sync is running.\n\nTo check if all missed orders have synced, look for orders tagged with Sync:Error in the Shopify admin. Any recent ones were identified but didn't sync.`);
+        if (!shouldProceed) {
+          return;
+        }
+        
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffSyncMissedOrders');
+        const data = await result.json();
+        console.log(data);
+
+        alert(`Orders have been found and synced`);
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5
+  },
+  {
     title: 'Sync Blank Orders',
     script: () => {
       (async () => {
