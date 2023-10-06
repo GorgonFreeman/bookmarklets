@@ -1129,6 +1129,44 @@ const bookmarklets = [
     docs: '',
     version: '1.0',
     category: 5
+  },
+  {
+    title: 'Report Double Line Items in PVX',
+    script: () => {
+      (async () => {
+        const shouldProceed = confirm(`Wanna see if there are any double line items in PVX?`);
+        if (!shouldProceed) {
+          return;
+        }
+
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffReportDoubles', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        const data = await result.json();
+        console.log(data);
+
+        if (data?.message) {
+          alert(message);
+          return;
+        }
+
+        if (data.length > 0) {
+          alert([
+            `I found ${ data.length > 1 ? 'some orders' : 'an order' } with double line items. Here are the order IDs:`,
+            ...data,
+          ].join('\r\n'));
+          return;
+        }
+
+        alert('No doubles! Yay c:');
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5
   }
 ];
 
