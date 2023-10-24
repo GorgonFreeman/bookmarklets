@@ -307,18 +307,23 @@ const bookmarklets = [
       console.log('Data', arr);
       const inputAsArr = Array.isArray(arr) ? arr : [arr];
 
-      const cols = inputAsArr.map(item => Object.keys(item).map(val => preserveCommas(val)))
+      const cols = inputAsArr.map(item => Object.keys(item))
         .flat()
         // Make keys unique
         .filter((value, index, self) => {
           return self.indexOf(value) === index;
-        })
-        .join(',');      
-      const rows = inputAsArr.map(item => Object.values(item).map(val => preserveCommas(val)).join(','));
+        });
+      const headerRow = cols.map(val => preserveCommas(val)).join(',');
+      // const rows = inputAsArr.map(item => Object.values(item).map(val => preserveCommas(val)).join(','));
+      const rows = inputAsArr.map(item => cols.map(col => {
+        const val = item?.[col] ?? '';
+        return preserveCommas(val);
+      }));
       console.log('Cols', cols);
+      console.log('Header Row', headerRow);
       console.log('Rows', rows);
 
-      const csvContent = [cols, ...rows].join('\n');
+      const csvContent = [headerRow, ...rows].join('\n');
 
       const download = (filename, text) => {
         const el = document.createElement('a');
