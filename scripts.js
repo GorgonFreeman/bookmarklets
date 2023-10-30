@@ -1197,7 +1197,7 @@ const bookmarklets = [
         alert(`They've been sent to Starshipit, but sometimes Starshipit doesn't respond. Check if the first order is in, and if it isn't, run the bookmarklet again until it works. If you've already tried this a couple of times, it could be something else - send the IDs to the dev team and they'll sort it out.`);
       })();
     },
-    docs: '',
+    docs: 'https://gist.github.com/GorgonFreeman/afb5105ae96fb8b90315a34b6c2b37d7',
     version: '1.0',
     category: 5
   },
