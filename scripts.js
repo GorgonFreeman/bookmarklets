@@ -1172,7 +1172,35 @@ const bookmarklets = [
     docs: '',
     version: '1.0',
     category: 5
-  }
+  },
+  {
+    title: 'Sync PVX Orders to Starshipit',
+    script: () => {
+      (async () => {
+        const idsLines = prompt('Order IDs, one per line:');
+        const idsArray = idsLines.split('\n').filter(item => item);
+        
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffSyncPVXOrdersToStarshipit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            ids: idsArray,
+          }),
+        });
+        
+        const data = await result.json();
+        console.log(data);
+
+        // TO DO: Success and error reporting
+        alert(`They've been sent to Starshipit, but sometimes Starshipit doesn't respond. Check if the first order is in, and if it isn't, run the bookmarklet again until it works. If you've already tried this a couple of times, it could be something else - send the IDs to the dev team and they'll sort it out.`);
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5
+  },
 ];
 
 /*
