@@ -742,92 +742,116 @@ const bookmarklets = [
     category: 1
   },
   {
-    title: 'AU/US Region Switcher: Products',
+    title: 'AU/US Region Switcher',
     script: () => {
 
       (async () => {
-      try {
 
-      const creds = {
-        au: {
-          STORE_URL: 'https://white-fox-boutique-aus.myshopify.com',
-        },
-        us: {
-          STORE_URL: 'https://white-fox-boutique-usa.myshopify.com',
-        },
-      };
-
-      const regionFlags = {
-        au: 'white-fox-boutique-aus',
-        us: 'white-fox-boutique-usa',
-      };
-
-      const getURLTrunkAndBranch = windowLocation => {
         try {
-          const legacyTrunks = ['https://white-fox-boutique-aus.myshopify.com', 'https://white-fox-boutique-usa.myshopify.com'];
-          const newTrunks = ['https://admin.shopify.com/store/white-fox-boutique-aus', 'https://admin.shopify.com/store/white-fox-boutique-usa'];
+          const regionFlags = {
+            au: 'white-fox-boutique-aus',
+            us: 'white-fox-boutique-usa',
+          };
 
-          const { href, origin, pathname } = windowLocation;
+          const { href, origin, pathname } = window.location;
           const baseURL = `${ origin }${ pathname }`;
 
-          const [region, correctRegionFlag] = Object.entries(regionFlags).find(([r, flag]) => baseURL.indexOf(flag) !== -1);
-          console.log(region, correctRegionFlag);
-
-          let trunk, branch;
-          if (legacyTrunks.some(t => baseURL.indexOf(t) !== -1)) {
-            // Legacy format
-            ({ origin: trunk, pathname: branch } = windowLocation);
-            console.log(trunk, branch, windowLocation);
-          } else if (newTrunks.some(t => baseURL.indexOf(t) !== -1)) {
-            // New format
-            [trunk, branch] = baseURL.split(correctRegionFlag);
-            trunk = `${ trunk }${ correctRegionFlag }`;
-            console.log(trunk, branch, baseURL.split(correctRegionFlag));
+          const fromRegionEntry = Object.entries(regionFlags).find(([k,v]) => window.location.href.includes(v));
+          const [fromRegion, fromRegionFlag] = fromRegionEntry;
+          const toRegionEntry = Object.entries(regionFlags).find(([k,v]) => k !== fromRegion);
+          const [toRegion, toRegionFlag] = toRegionEntry;
+          
+          const oldSplitter = `${ fromRegionFlag }/admin/`;
+          const newSplitter = `${ fromRegionFlag }/`;
+          const splitters = [oldSplitter, newSplitter];
+          
+          let branch;
+          for (const splitter of splitters) {
+            if (!baseURL.includes(splitter)) {
+              continue;
+            }
+            branch = baseURL.split(splitter)[1];
           }
-          console.log(trunk, branch);
 
-          return {
-            trunk,
-            branch,
-            region,
+          let switchURL = baseURL.replace(fromRegionFlag, toRegionFlag);
+
+          const getSwitchURL = async (identifier, type) => {
+            const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffSwitcher', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ 
+                identifier, 
+                type, 
+                from: fromRegion, 
+                to: toRegion,
+              }),
+            });
+            const data = await result.json();
+            console.log(data);
+            const { admin_url } = data;
+            return admin_url;
           };
+
+          const stringBetween = (string, before, after) => {
+            let middleString = string;
+            if (string.includes(before) && string.indexOf(before) < string.indexOf(after)) {
+              middleString = middleString.split(before, 2)[1];
+            }
+            if (string.includes(after)) {
+              middleString = middleString.split(after, 2)[0];
+            }
+            return middleString;
+          };
+          
+          console.log(branch);
+          if (branch.includes('products/inventory/')) {
+            console.log(`We're on an inventory item`);
+            const inventoryItemID = stringBetween(branch, 'products/inventory/', '/');
+            console.log('inventoryItemID', inventoryItemID);
+            switchURL = await getSwitchURL(inventoryItemID, 'inventory_item');
+            console.log(switchURL);
+          } else if (branch.includes('products/')) {
+            const productID = stringBetween(branch, '/products/', '/');
+
+            if (branch.includes('variants/')) {
+
+              console.log(`We're on a variant`);
+              const json = await fetch(`${ baseURL }.json`);
+              const data = await json.json();
+              console.log('data', data);
+              const { sku } = data?.variant;
+              console.log('sku', sku);
+              // const variantID = stringBetween(branch, 'variants/', '/');
+              switchURL = await getSwitchURL(sku, 'variant');
+              console.log(switchURL);
+
+            } else {
+              console.log(`We're on a product`);
+              const json = await fetch(`${ baseURL }.json`);
+              const data = await json.json();
+              console.log('data', data);
+              const { handle } = data?.product;
+              console.log('handle', handle);
+              switchURL = await getSwitchURL(handle, 'product');
+              console.log(switchURL);
+            }
+          }
+
+          if (!switchURL || switchURL.error) {
+            throw new Error('switchURL is not valid', switchURL);
+          }
+
+          window.open(switchURL.includes('://') ? switchURL : `https://${ switchURL }`);
         } catch(err) {
-          alert('Are you on a Shopify admin page?');
-          throw err;
+          console.error(err);
+          alert(`Sorry, something went wrong, feel free to send your url to the dev team and see why it didn't work: ${ window.location.href }`);
         }
-      }
-
-      const { trunk, branch, region } = getURLTrunkAndBranch(window.location);
-
-      const fromRegion = region;
-      const toRegion = Object.keys(regionFlags).find(key => key !== region);
-
-      let productID, variantID;
-
-      try {
-        productID = branch.split('/products/')[1].split('/')[0];  
-      } catch(err) {
-        alert('Not on a product in the admin');
-      }
-
-      try {
-        variantID = branch.split('/variants/')[1].split('/')[0];
-      } catch(err) {
-        console.log('No variant');
-      }
-
-      const viewButton = document.querySelector('a[href*="whitefoxboutique.com"][href*="/products/"]');
-      const handle = viewButton.href.split('/products/').pop();
-      const toSearchURL = `${ creds[toRegion].STORE_URL }/admin/products?selectedView=all&query=${ handle }`;
-      window.open(toSearchURL);
-
-      } catch(err) {
-        console.error(err);
-      }
       })();
     },
     docs: 'https://gist.github.com/GorgonFreeman/b6339f408aaad4459110f04dcd594d52',
-    version: '3.0',
+    version: '4.0',
     category: 1
   },
   {
