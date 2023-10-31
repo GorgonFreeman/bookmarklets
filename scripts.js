@@ -852,7 +852,7 @@ const bookmarklets = [
     },
     docs: 'https://gist.github.com/GorgonFreeman/b6339f408aaad4459110f04dcd594d52',
     version: '4.0',
-    category: 1
+    category: 5
   },
   {
     title: 'ASOS Order Info',
