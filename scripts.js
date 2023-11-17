@@ -1225,6 +1225,99 @@ const bookmarklets = [
     version: '1.0',
     category: 5
   },
+  {
+    title: 'Fast Simon Fact Checker',
+    script: () => {
+      const shadowRoot = document.getElementById('fast-simon-serp-app').shadowRoot;
+      const productTiles = Array.from(shadowRoot.querySelectorAll('[data-product-id]'));
+      const handles = Array.from(new Set(productTiles.map(el => {
+        return el.querySelector('.fs-product-main-image-wrapper')?.href?.split('/').pop();
+      }))).filter(handle => handle);
+
+      const extractInt = (inputString) => {
+        const numbersOnly = inputString.replace(/\D/g, '');
+        return parseInt(numbersOnly, 10);
+      };
+
+      (async () => {
+        const productData = await Promise.all(handles.map(async handle => {
+          const url = `/products/${ handle }.json`;
+          const response = await fetch(url);
+          const data = await response.json();
+          return data?.product;
+        }));
+        console.log(1, productData);
+
+        productTiles.forEach(tile => {
+          // console.log(tile);
+
+          const handle = tile.querySelector('.fs-product-main-image-wrapper')?.href?.split('/').pop();
+          if (!handle) {
+            return;
+          }
+
+          const dataItem = productData.find(item => item.handle === handle);
+          const variant = dataItem.variants[0];
+          const { price, compare_at_price } = variant;
+
+          const priceEl = tile.querySelector('.price');
+          const priceCents = extractInt(priceEl.innerHTML);
+          const dataPrice = extractInt(price);
+          console.log(priceCents, dataPrice);    
+
+          if (priceCents !== dataPrice) {
+            alert(`Price wrong on ${ handle }`);
+            return;
+          }
+
+          const comparePriceEl = tile.querySelector('.compare');
+          if (comparePriceEl) {
+
+            const comparePriceCents = extractInt(comparePriceEl.innerHTML);
+            const dataComparePrice = extractInt(compare_at_price);
+            console.log(comparePriceCents, dataComparePrice);
+
+            if (comparePriceCents !== dataComparePrice) {
+              alert(`Compare at price wrong on ${ handle }`);
+              return;
+            }
+
+            const percentOffEl = tile.querySelector('.isp-cstm-sale-off-badge');
+            const percentOff = extractInt(percentOffEl.innerHTML);
+            const dataPercentOff = Math.round(100 - (dataPrice / dataComparePrice) * 100);
+            console.log(percentOff, dataPercentOff);
+
+            if (percentOff !== dataPercentOff) {
+              alert(`Percent off wrong on ${ handle }`);
+              return;
+            }
+
+          }
+
+          const promoTextEl = tile.querySelector('.isp-cstm-discount-message');
+          if (!promoTextEl) {
+            return;
+          }
+
+          const promoText = promoTextEl.innerHTML;
+          if (!promoText) {
+            return;
+          }
+          
+          const dataPromoText = window.theme.discountMessageGenerator([window.theme.discountMessageTag], dataPrice);
+          console.log(promoText, dataPromoText);
+          console.log(promoText.length, dataPromoText.length);
+          if (promoText !== dataPromoText) {
+            alert(`Promo text wrong on ${ handle }`);
+            return;
+          }
+        });
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 3
+  },
 ];
 
 /*
