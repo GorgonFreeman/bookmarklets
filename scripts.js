@@ -1318,6 +1318,69 @@ const bookmarklets = [
     version: '1.0',
     category: 3
   },
+  {
+    title: 'Set Yotpo Module Product Order',
+    script: () => {
+      alert(`1. Visit a Yotpo rewards page builder or whatever and open the "Select products" dropdown.
+        2. With the inspector, inspect an option of the newly-opened dropdown. This sets the context to the document of the iframe the editor is housed in, so you can use its DOM.`);
+
+      // Example order:
+      /*
+      Heart Eyes Tote Bag Cream
+      Drink It Up Tumbler Clear
+      Keep It Together Case Pink
+      Beauty Sleep Set Pink Gingham
+      Beauty Sleep Set Yellow Gingham
+      */
+
+      const findElementsWithText = (text, context = document) => {
+        const xpathExpression = `//*[contains(text(), '${text}')]`;
+        const result = document.evaluate(xpathExpression, context, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+        return result.singleNodeValue ? result.singleNodeValue : false;
+      };
+
+      const setTimeoutPromise = ms => new Promise((resolve, reject) => setTimeout(resolve, ms));
+
+      (async () => {
+
+        let productOrder = await prompt('Product order:');
+        productOrder = productOrder.split('\n');
+
+        const dropdown = document.querySelector('wadmin-select-dropdown');
+        const options = dropdown.querySelectorAll('.option');
+        const selectedOptions = dropdown.querySelectorAll('.option.selected');
+
+        // If the first product is not selected, select it.
+        const firstOption = findElementsWithText(`${ productOrder[0] } (`, dropdown);
+        console.log(firstOption);
+        if (firstOption.classList.contains('selected')) {
+          console.log(`Already selected, nice`);
+        } else {
+          firstOption.click();
+        }
+
+        // Unselect all products that are not the first product.
+        const selectedOptionsNotFirst = Array.from(selectedOptions).filter(el => el !== firstOption);
+        for (const option of selectedOptionsNotFirst) {
+          option.click();
+          await setTimeoutPromise(500);
+        }
+
+        // Reselect the rest of the products in order.
+        for (const product of productOrder.slice(1)) {
+          const option = findElementsWithText(`${ product } (`, dropdown);
+          option.click();
+          await setTimeoutPromise(500);
+        }
+
+        alert('Done!');
+
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 3
+  },
 ];
 
 /*
