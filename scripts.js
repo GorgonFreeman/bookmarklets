@@ -1381,6 +1381,39 @@ const bookmarklets = [
     version: '1.0',
     category: 3
   },
+  {
+    title: 'Check SKUs Inventory',
+    script: () => {
+      (async () => {
+        const shouldProceed = confirm(`You're about to check inventory for a list of SKUs. You can use partial or full SKUs. It'll be the lowest number between WF AU and US to try and account for recent orders. No Baddest atm due to split. Click OK to proceed.`);
+        if (!shouldProceed) {
+          return;
+        }
+
+        const skusLines = prompt('Please enter the SKUs/partials you want to check inventory for, one per line:');
+        const skusArray = skusLines.split('\n').filter(item => item);
+        
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffInventoryCheckSKUs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            partialSKUs: skusArray,
+          }),
+        });
+        
+        const data = await result.json();
+        console.log(data);
+
+        // TO DO: Success and error reporting
+        alert(`I'll message in foxtron_fetch shortly!`);
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5
+  },
 ];
 
 /*
