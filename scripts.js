@@ -1414,6 +1414,62 @@ const bookmarklets = [
     version: '1.0',
     category: 5
   },
+  {
+    title: 'SKUs to Custom Collection',
+    script: () => {
+      (async () => {
+        try {
+          const shouldProceed = confirm(`This bookmarklet will ask for a title and a list of SKUs, and generate a CSV to be uploaded into Matrixify. Click OK to proceed.`);
+          if (!shouldProceed) {
+            return;
+          }
+
+          const collectionTitle = prompt('Enter the title of your new collection:');
+          if (!collectionTitle) {
+            alert('No collection title entered. Try again.');
+            return;
+          }
+
+          const skusLines = prompt('Enter the partial SKUs you want in your collection, one per line:');
+          const skusArray = skusLines.split('\n').filter(item => item);
+
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/randoPartialsToCustomCollectionCsv', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              collectionTitle,
+              partials: skusArray,
+            }),
+          });
+          const data = await result.json();
+          const { csv } = data;
+
+          const download = (filename, text) => {
+            const el = document.createElement('a');
+            el.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            el.setAttribute('download', filename);
+
+            el.style.display = 'none';
+            document.body.appendChild(el);
+
+            el.click();
+
+            document.body.removeChild(el);
+          }
+          download(`Custom Collection ${ collectionTitle }.csv`, csv);
+
+          window.open('https://admin.shopify.com/store/white-fox-boutique-aus/apps/excel-export-import', '_blank');
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
@@ -1424,8 +1480,8 @@ const bookmarklets = [
     },
     docs: '',
     version: '1.0',
-    category: 1
-  }
+    category: 1,
+  },
 */
 
 const categories = [
