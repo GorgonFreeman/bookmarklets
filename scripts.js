@@ -1466,7 +1466,7 @@ const bookmarklets = [
         }
       })();
     },
-    docs: '',
+    docs: 'https://gist.github.com/GorgonFreeman/340e12b6b62ab7c3f10879d14d7ce4f0',
     version: '1.0',
     category: 5,
   },
