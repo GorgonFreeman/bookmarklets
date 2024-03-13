@@ -1077,31 +1077,32 @@ const bookmarklets = [
     category: 5
   },
   {
-    title: 'Sync Blank Orders',
+    title: 'Sync Orders Shopify > PVX',
     script: () => {
       (async () => {
-        const idsLines = prompt('Order IDs, one per line:');
-        const idsArray = idsLines.split('\n').filter(item => item);
-        
-        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffSyncBlankOrders', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            ids: idsArray,
-          }),
-        });
-        
-        const data = await result.json();
-        console.log(data);
+        try {
+          const idsLines = prompt('Order IDs, one per line:');
+          const idsArray = idsLines.split('\n').filter(item => item);
 
-        // TO DO: Success and error reporting
-        alert('All of your orders have been synced - check if there are still any blank orders remaining.');
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexOrdersSyncShopifyToPvxById', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              orderIds: idsArray,
+            }),
+          });
+          const data = await result.json();
+          console.log(data);
+          alert(`Done - probably successful, can't say for sure.`);
+        } catch(err) {
+          alert(err);
+        }
       })();
     },
     docs: '',
-    version: '1.0',
+    version: '2.0',
     category: 5
   },
   {
@@ -1198,7 +1199,7 @@ const bookmarklets = [
     category: 5
   },
   {
-    title: 'Sync PVX Orders to Starshipit',
+    title: 'Sync Orders PVX > Starshipit',
     script: () => {
       (async () => {
         const idsLines = prompt('Order IDs, one per line:');
