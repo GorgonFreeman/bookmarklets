@@ -1077,35 +1077,6 @@ const bookmarklets = [
     category: 5
   },
   {
-    title: 'Sync Orders Shopify > PVX',
-    script: () => {
-      (async () => {
-        try {
-          const idsLines = prompt('Order IDs, one per line:');
-          const idsArray = idsLines.split('\n').filter(item => item);
-
-          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexOrdersSyncShopifyToPvxById', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              orderIds: idsArray,
-            }),
-          });
-          const data = await result.json();
-          console.log(data);
-          alert(`Done - probably successful, can't say for sure.`);
-        } catch(err) {
-          alert(err);
-        }
-      })();
-    },
-    docs: '',
-    version: '2.0',
-    category: 5
-  },
-  {
     title: 'Sync Inventory PVX > Shopify',
     script: () => {
       (async () => {
@@ -1195,34 +1166,6 @@ const bookmarklets = [
       })();
     },
     docs: '',
-    version: '1.0',
-    category: 5
-  },
-  {
-    title: 'Sync Orders PVX > Starshipit',
-    script: () => {
-      (async () => {
-        const idsLines = prompt('Order IDs, one per line:');
-        const idsArray = idsLines.split('\n').filter(item => item);
-        
-        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffSyncPVXOrdersToStarshipit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            ids: idsArray,
-          }),
-        });
-        
-        const data = await result.json();
-        console.log(data);
-
-        // TO DO: Success and error reporting
-        alert(`They've been sent to Starshipit, but sometimes Starshipit doesn't respond. Check if the first order is in, and if it isn't, run the bookmarklet again until it works. If you've already tried this a couple of times, it could be something else - send the IDs to the dev team and they'll sort it out.`);
-      })();
-    },
-    docs: 'https://gist.github.com/GorgonFreeman/afb5105ae96fb8b90315a34b6c2b37d7',
     version: '1.0',
     category: 5
   },
@@ -1470,6 +1413,63 @@ const bookmarklets = [
     docs: 'https://gist.github.com/GorgonFreeman/340e12b6b62ab7c3f10879d14d7ce4f0',
     version: '1.0',
     category: 5,
+  },
+  {
+    title: 'Sync Orders Shopify > PVX',
+    script: () => {
+      (async () => {
+        try {
+          const idsLines = prompt('Order IDs, one per line:');
+          const idsArray = idsLines.split('\n').filter(item => item);
+
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexOrdersSyncShopifyToPvxById', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              orderIds: idsArray,
+            }),
+          });
+          const data = await result.json();
+          console.log(data);
+          alert(`Done - probably successful, can't say for sure.`);
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '2.0',
+    category: 5
+  },
+  {
+    title: 'Sync Orders PVX > Starshipit',
+    script: () => {
+      (async () => {
+        const idsLines = prompt('Order IDs, one per line:');
+        const idsArray = idsLines.split('\n').filter(item => item);
+        
+        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffSyncPVXOrdersToStarshipit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            ids: idsArray,
+          }),
+        });
+        
+        const data = await result.json();
+        console.log(data);
+
+        // TO DO: Success and error reporting
+        alert(`They've been sent to Starshipit, but sometimes Starshipit doesn't respond. Check if the first order is in, and if it isn't, run the bookmarklet again until it works. If you've already tried this a couple of times, it could be something else - send the IDs to the dev team and they'll sort it out.`);
+      })();
+    },
+    docs: 'https://gist.github.com/GorgonFreeman/afb5105ae96fb8b90315a34b6c2b37d7',
+    version: '1.0',
+    category: 5
   },
 ];
 
