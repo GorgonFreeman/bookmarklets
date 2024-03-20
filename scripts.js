@@ -1076,6 +1076,7 @@ const bookmarklets = [
     version: '1.0',
     category: 5
   },
+  /*
   {
     title: 'Sync Inventory PVX > Shopify',
     script: () => {
@@ -1111,6 +1112,7 @@ const bookmarklets = [
     version: '1.0',
     category: 5
   },
+  */
   {
     title: 'Populate PVX MIDs',
     script: () => {
@@ -1470,6 +1472,89 @@ const bookmarklets = [
     docs: 'https://gist.github.com/GorgonFreeman/afb5105ae96fb8b90315a34b6c2b37d7',
     version: '1.0',
     category: 5
+  },
+  {
+    title: 'Sync Inventory PVX > Shopify',
+    script: () => {
+      (async () => {
+        try {
+          const shouldProceed = confirm(`We're about to make some inventory sheets and upload them to Shopify. Press OK to proceed.`);
+          if (!shouldProceed) {
+            return;
+          }
+
+          const modeInput = prompt(`
+            1: WF
+            2: Baddest
+          `);
+          if (!modeInput) {
+            alert('We out.');
+            return;
+          }
+
+          const modeMap = {
+            1: 'wf',
+            2: 'baddest',
+          };
+          const modeKey = modeMap[modeInput];
+
+          if (!modeKey) {
+            alert('We out.');
+            return;
+          }
+
+          const skusTypeInput = prompt(`
+            1: Full SKUs
+            2: Partial SKUs
+          `);
+          if (!skusTypeInput) {
+            alert('We out.');
+            return;
+          }
+
+          const skusTypeMap = {
+            1: 'skus',
+            2: 'partialSkus',
+          };
+          const skusType = skusTypeMap[skusTypeInput];
+
+          if (!skusType) {
+            alert('We out.');
+            return;
+          }
+
+          let skus = prompt('SKUs, one per line:');
+          skus = skus.split('\n').filter(item => item);
+
+          console.log({ 
+            modeKey,
+            [skusType]: skus,
+          });
+
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexInventoryToImportSheets', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              modeKey,
+              options: { 
+                [skusType]: skus,
+              },
+            }),
+          });
+          const data = await result.json();
+          console.log(data);
+
+          alert(`Sheets are on their way, look our for a message in the foxtron_fetch Slack channel. It'll probably take about 10 mins for a big import.`);
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '3.0',
+    category: 5,
   },
 ];
 
