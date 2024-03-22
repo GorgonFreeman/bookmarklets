@@ -1027,36 +1027,6 @@ const bookmarklets = [
     category: 5
   },
   {
-    title: 'Run Inventory Check',
-    script: () => {
-      (async () => {
-        const shouldProceed = confirm(`Look out for a Slack message in foxtron_fetch. If you don't have one after 15 minutes, something may have gone wrong. It usually takes 10 minutes to run.\n\nTo run the inventory check, press OK.`);
-        // confirm returns true/false
-        if (!shouldProceed) {
-          console.log('shouldProceed', shouldProceed);
-          return;
-        }
-        
-        const result = await fetch('https://australia-southeast1-foxfunctions.cloudfunctions.net/ffRunInventoryCheck', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            full: true,
-          }),
-        });
-        
-        const data = await result.json();
-        console.log(data);
-        alert('The inventory check is complete - look for a message in Slack.');
-      })();
-    },
-    docs: '',
-    version: '1.0',
-    category: 5
-  },
-  {
     title: 'Sync Missed Orders',
     script: () => {
       (async () => {
@@ -1555,6 +1525,153 @@ const bookmarklets = [
     docs: '',
     version: '3.0',
     category: 5,
+  },
+  {
+    title: 'Run Inventory Check',
+    script: () => {
+      (async () => {
+        try {
+          const shouldProceed = confirm(`Want to check the inventory in Shopify? Press OK to proceed.`);
+          if (!shouldProceed) {
+            return;
+          }
+
+
+          const modeInput = prompt(`
+            1: WF
+            2: Baddest
+          `);
+
+          if (!modeInput) {
+            alert('We out.');
+            return;
+          }
+
+          const modeKey = {
+            1: 'wf',
+            2: 'baddest',
+          }[modeInput];
+
+          if (!modeKey) {
+            alert('We out.');
+            return;
+          }
+
+          const configs = {
+            wf: ['au', 'us'], // 'uk'],
+            baddest: ['baddest'],
+          }[modeKey];
+
+          let options = {
+            pvxSite: {
+              wf: 'PrimarySite',
+              baddest: 'BaddestSite',
+            }[modeKey],
+          };
+
+
+          const proceedInput = prompt(`
+            1: Report on only published products, with a min "in-stock" diff of 3
+            2: More options
+          `);
+
+          if (!proceedInput) {
+            alert('We out.');
+            return;
+          }
+          const proceedWithDefaultOptions = {
+            1: true,
+            2: false,
+          }[proceedInput];
+
+          if (![true, false].includes(proceedWithDefaultOptions)) {
+            alert('We out.');
+            return;
+          }
+
+          let additionalOptions = {
+            silentZeros: true,
+            onlyPublished: true,
+            minInStockDiff: 3,
+          };
+
+          if (proceedWithDefaultOptions !== true) {
+
+            const onlyPublishedInput = prompt(`
+              1: Only report published products (faster)
+              2: Report all products
+            `);
+
+            if (!onlyPublishedInput) {
+              alert('We out.');
+              return;
+            }
+            const onlyPublished = {
+              1: true,
+              2: false,
+            }[onlyPublishedInput];
+
+            if (![true, false].includes(onlyPublished)) {
+              alert('We out.');
+              return;
+            }
+
+
+            const minInStockDiffInput = prompt(`
+              Enter the min in-stock diff. 
+              Diffs less than this will not be reported, e.g. 
+              - you may want to start at 2 to ignore cases where an order just hasn't synced yet
+              - or a higher number like 5 during sales
+              - or an even higher number like 8 to detect only restocks
+              Diffs where the product is out of stock in Shopify will still be reported so we can sync returns.
+            `);
+
+            if (!minInStockDiffInput || isNaN(parseInt(minInStockDiff))) {
+              alert('Nope.');
+              return;
+            }
+
+            const minInStockDiff = parseInt(minInStockDiff);
+
+            additionalOptions = { ...additionalOptions, ...{
+              onlyPublished,
+              minInStockDiffInput,
+            } };
+
+          }
+
+          options = { ...options, ...additionalOptions };
+
+          const args = { 
+            configs,
+            options,
+          };
+          console.log(args);
+         
+          const doIt = async () => {
+            const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexInventoryReport', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(args),
+            });
+            const data = await result.json();
+            console.log(data);
+          };
+
+          doIt();
+
+          alert(`Ok, look out for my message in #foxtron_fetch.`);
+          
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '3.0',
+    category: 5
   },
 ];
 
