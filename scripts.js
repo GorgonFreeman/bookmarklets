@@ -1501,29 +1501,33 @@ const bookmarklets = [
             [skusType]: skus,
           });
 
-          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexInventoryToImportSheets', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              modeKey,
-              options: { 
-                [skusType]: skus,
+          const doIt = async () => {
+            const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexInventoryToImportSheets', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
               },
-            }),
-          });
-          const data = await result.json();
-          console.log(data);
+              body: JSON.stringify({ 
+                modeKey,
+                options: { 
+                  [skusType]: skus,
+                },
+              }),
+            });
+            const data = await result.json();
+            console.log(data);
+          };
 
-          alert(`Sheets are on their way, look our for a message in the foxtron_fetch Slack channel. It'll probably take about 10 mins for a big import.`);
+          doIt();
+
+          alert(`Sheets are on their way, look our for a message in the foxtron_fetch Slack channel. It'll probably take about 15 mins for a big import - if it takes longer than that, might have been an error.`);
         } catch(err) {
           alert(err);
         }
       })();
     },
     docs: '',
-    version: '3.0',
+    version: '3.1',
     category: 5,
   },
   {
