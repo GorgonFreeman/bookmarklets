@@ -1626,16 +1626,16 @@ const bookmarklets = [
               Diffs where the product is out of stock in Shopify will still be reported so we can sync returns.
             `);
 
-            if (!minInStockDiffInput || isNaN(parseInt(minInStockDiff))) {
+            if (!minInStockDiffInput || isNaN(parseInt(minInStockDiffInput))) {
               alert('Nope.');
               return;
             }
 
-            const minInStockDiff = parseInt(minInStockDiff);
+            const minInStockDiff = parseInt(minInStockDiffInput);
 
             additionalOptions = { ...additionalOptions, ...{
               onlyPublished,
-              minInStockDiffInput,
+              minInStockDiff,
             } };
 
           }
