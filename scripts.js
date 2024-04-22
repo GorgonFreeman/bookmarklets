@@ -1526,7 +1526,7 @@ const bookmarklets = [
         }
       })();
     },
-    docs: '',
+    docs: 'https://gist.github.com/GorgonFreeman/0d281a1a873768aea107aaf4e7274609',
     version: '3.1',
     category: 5,
   },
@@ -1673,7 +1673,7 @@ const bookmarklets = [
         }
       })();
     },
-    docs: '',
+    docs: 'https://gist.github.com/GorgonFreeman/0d281a1a873768aea107aaf4e7274609',
     version: '3.0',
     category: 5
   },
