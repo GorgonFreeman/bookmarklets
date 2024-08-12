@@ -1677,6 +1677,64 @@ const bookmarklets = [
     version: '3.0',
     category: 5
   },
+  {
+    title: 'Set Store Credit Metafield',
+    script: () => {
+      (async () => {
+        try {
+          const configInput = prompt(`
+            1: AU
+            2: US
+          `);
+          if (!configInput) {
+            alert('We out.');
+            return;
+          }
+
+          const configMap = {
+            1: 'au',
+            2: 'us',
+          };
+          const config = configMap[configInput];
+
+          if (!config) {
+            alert('We out.');
+            return;
+          }
+
+          const email = prompt(`What's the customer's email?`);
+          if (!email) {
+            alert('No email provided.');
+            return;
+          }
+
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/shopifyCustomerSetStoreCreditBalanceMetafield', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              config,
+              email,
+            }),
+          });
+          const data = await result.json();
+          console.log(data);
+
+          if (data?.[0]?.data?.metafieldsSet?.metafields?.length > 0) {
+            alert('Success');
+          } else {
+            alert(data);
+          }
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
