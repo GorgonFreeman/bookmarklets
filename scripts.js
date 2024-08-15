@@ -1735,6 +1735,152 @@ const bookmarklets = [
     version: '1.0',
     category: 5,
   },
+  {
+    title: 'Pro',
+    script: () => {
+      (async () => {
+        try {
+
+          const send = async (url, data) => {
+            const result = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+            const resultJson = await result.json();
+            console.log(resultJson);
+            return resultJson;
+          }
+
+          const email = prompt(`Promoting to staff account. Work email (without @whitefoxboutique.com):`);
+          if (!email) {
+            alert(`We out`);
+            return;
+          }
+
+          const emailOnlyResult = await send('https://australia-southeast1-foxtware.cloudfunctions.net/shopifyStaffCustomerPromote', { email });
+          console.log('emailOnlyResult', emailOnlyResult);
+
+          let askForNames = false;
+          if (!emailOnlyResult?.success) {
+            if (emailOnlyResult?.errors?.includes('No customer found')) {
+              askForNames = true;
+            }
+          } else {
+
+            const goToStoreCredit = confirm('Success - press ok to go to store credit, cancel to leave it.');
+            if (goToStoreCredit) {
+              const { info } = emailOnlyResult;
+              const { storeCreditUrl } = info;
+              window.open(storeCreditUrl);
+            }
+            
+            return;
+          }
+
+          if (!askForNames) {
+            alert(emailOnlyResult?.errors || 'Something went wrong, please try again');
+            return;
+          }
+
+          alert(`${ email } doesn't currently have an account, so we'll make one. This will automatically send an email inviting the user to activate their account.`);
+
+          const firstName = prompt(`First name:`);
+          if (!firstName) {
+            alert(`We out`);
+            return;
+          }
+
+          const lastName = prompt(`Last name:`);
+          if (!lastName) {
+            alert(`We out`);
+            return;
+          }
+
+          const accountCreateResult = await send('https://australia-southeast1-foxtware.cloudfunctions.net/shopifyStaffCustomerPromote', { 
+            email, 
+            options: { 
+              firstName, 
+              lastName,
+            }, 
+          });
+          console.log('accountCreateResult', accountCreateResult);
+
+          if (!accountCreateResult?.success) {
+            alert(accountCreateResult?.errors || 'Something went wrong, please try again');
+            return;
+          }
+
+          const goToStoreCredit = confirm('Success - press ok to go to store credit, cancel to leave it.');
+          if (goToStoreCredit) {
+            const { info } = accountCreateResult;
+            const { storeCreditUrl } = info;
+            window.open(storeCreditUrl);
+          }
+          return;
+
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 2,
+  },
+  {
+    title: 'Dem',
+    script: () => {
+      (async () => {
+        try {
+
+          const send = async (url, data) => {
+            const result = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+            const resultJson = await result.json();
+            console.log(resultJson);
+            return resultJson;
+          }
+
+          const email = prompt(`Removing staff account. Work email (without @whitefoxboutique.com):`);
+          if (!email) {
+            alert(`We out`);
+            return;
+          }
+
+          const demoteResult = await send('https://australia-southeast1-foxtware.cloudfunctions.net/shopifyStaffCustomerDemote', { email });
+          console.log('demoteResult', demoteResult);
+
+          if (!demoteResult?.success) {
+            alert(demoteResult?.errors || 'Something went wrong, please try again');
+            return;
+          }
+
+          const { info } = demoteResult;
+          const { storeCreditUrl, storeCreditBalance, hasMultipleStoreCreditTags } = info;
+
+          const goToStoreCredit = confirm(`Success - user has ${ hasMultipleStoreCreditTags ? `multiple store credit tags, which is weird` : `${ storeCreditBalance } store credit` }. Press ok to go to store credit, or cancel.`);
+          if (goToStoreCredit) {
+            window.open(storeCreditUrl);
+          }
+          return;
+
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 2,
+  },
 ];
 
 /*
