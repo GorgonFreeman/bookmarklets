@@ -1881,6 +1881,68 @@ const bookmarklets = [
     version: '1.0',
     category: 2,
   },
+  {
+    title: 'Customs Data Sweep',
+    script: () => {
+      (async () => {
+        try {
+          const shouldProceed = confirm(`Click OK to add HS codes and so on on all stores.`);
+          if (!shouldProceed) {
+            return;
+          }
+
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/randoCustomsDataSweep', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              options: {
+                overwrite: true,
+              },
+            }),
+          });
+          const data = await result.json();
+          console.log(data);
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
+  {
+    title: 'Customs Data Audit (UK)',
+    script: () => {
+      (async () => {
+        try {
+          const shouldProceed = confirm(`Click OK to check the HS codes on the UK store.`);
+          if (!shouldProceed) {
+            return;
+          }
+
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/randoCustomsDataAudit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              config: 'uk',
+            }),
+          });
+          const data = await result.json();
+          console.log(data);
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
