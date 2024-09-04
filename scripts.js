@@ -1943,6 +1943,42 @@ const bookmarklets = [
     version: '1.0',
     category: 5,
   },
+  {
+    title: 'Sync Product Style Arcade > 3Clicks',
+    script: () => {
+      (async () => {
+        try {
+          const shouldProceed = confirm(`We're going to sync a product from Style Arcade to 3Clicks. It'll take a while but check back in a couple of mins. Cool?`);
+          if (!shouldProceed) {
+            return;
+          }
+
+          const styleNumber = prompt(`Style number:`);
+          if (!styleNumber) {
+            alert('No style number');
+            return;
+          }
+
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexProductSyncStylearcadeToThreeclicks', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              styleNumber,
+            }),
+          });
+          const data = await result.json();
+          console.log(data);
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
