@@ -1685,6 +1685,7 @@ const bookmarklets = [
           const configInput = prompt(`
             1: AU
             2: US
+            3: UK
           `);
           if (!configInput) {
             alert('We out.');
@@ -1694,6 +1695,7 @@ const bookmarklets = [
           const configMap = {
             1: 'au',
             2: 'us',
+            3: 'uk',
           };
           const config = configMap[configInput];
 
@@ -1732,7 +1734,7 @@ const bookmarklets = [
       })();
     },
     docs: '',
-    version: '1.0',
+    version: '1.1',
     category: 5,
   },
   {
