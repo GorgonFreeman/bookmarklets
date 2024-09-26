@@ -1981,6 +1981,72 @@ const bookmarklets = [
     version: '1.0',
     category: 5,
   },
+  {
+    title: 'Log In As Customer',
+    script: () => {
+      (async () => {
+        try {
+
+          const passwordInput = prompt(`Password:`);
+          if (passwordInput !== '!@#$%^&*') {
+            alert('Sorryyy');
+            return;
+          }
+
+          const send = async (url, data) => {
+            const result = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+            const resultJson = await result.json();
+            console.log(resultJson);
+            return resultJson;
+          }
+
+          const configInput = prompt(`
+            1: AU
+            2: US
+            3: UK
+          `);
+          if (!configInput) {
+            alert('We out.');
+            return;
+          }
+
+          const configMap = {
+            1: 'au',
+            2: 'us',
+            3: 'uk',
+          };
+          const config = configMap[configInput];
+
+          if (!config) {
+            alert('We out.');
+            return;
+          }
+
+          const email = prompt(`What's the customer's email?`);
+          if (!email) {
+            alert('No email provided.');
+            return;
+          }
+
+          const loginUrl = await send('https://australia-southeast1-foxtware.cloudfunctions.net/shopifyCustomerMultipassLoginUrlCreate', { config, email });
+
+          window.open(loginUrl);
+
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 1,
+  },
 ];
 
 /*
