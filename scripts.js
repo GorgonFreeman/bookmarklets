@@ -1893,7 +1893,7 @@ const bookmarklets = [
             return;
           }
 
-          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/randoCustomsDataSweep', {
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexCustomsDataSweepWithSuffixes', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
