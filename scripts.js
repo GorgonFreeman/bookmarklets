@@ -2047,6 +2047,103 @@ const bookmarklets = [
     version: '1.0',
     category: 1,
   },
+  {
+    title: 'Get URL from SKU List',
+    script: () => {
+      (async () => {
+        try {
+      
+          const configInput = prompt(`
+            1: AU
+            2: US
+            3: UK
+          `);
+          if (!configInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const configMap = {
+            1: 'au',
+            2: 'us',
+            3: 'uk',
+          };
+          const config = configMap[configInput];
+      
+          if (!config) {
+            alert('Invalid input! We out.');
+            return;
+          }
+      
+          const skuListInput = prompt(`Paste the list of SKUs here:`);
+          if (!skuListInput) {
+            alert('No SKUs???? We out.');
+            return;
+          }
+      
+          const skuList = skuListInput.split('\n');
+          if (!skuList || !Array.isArray(skuList) || skuList.length <=1 ) {
+            alert('SKU list cannot be processed! We out.');
+            return
+          }
+      
+          const urlTypeInput = prompt(`Do you want admin or store urls?\n1: Admin URL\n2: Store URL`);
+          if (!urlTypeInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const urlTypeMap = {
+            1: 'admin',
+            2: 'store',
+          };
+          const urlType = urlTypeMap[urlTypeInput];
+          if (!urlType) {
+            alert('Invalid input! We out.');
+            return;
+          }
+      
+          const payload = {
+            config,
+            skuList,
+            urlType
+          }
+      
+          alert(`Sending order to the kitchen(server).\nPlease wait...`);
+      
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/shopifyProductsSkuListToUrl', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ payload }),
+          });
+          const urlList = await result.json();
+          console.log("urlList", urlList);
+          if (!urlList || urlList.length < 0) {
+            alert(`Something went wrong with your order!! Check console...`)
+          }
+      
+          alert(`Your order is here! Click 'ok' to copy the URL list into your clipboard`);
+      
+          javascript:(function() {
+            const textToCopy = 'Your text here'; // Replace with the text you want to copy
+            navigator.clipboard.writeText(urlList.join('\n')).then(function() {
+              alert('Text copied to clipboard!');
+            }).catch(function(err) {
+              alert('Failed to copy text: ' + err);
+            });
+          })();
+          
+        } catch( err ) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 1,
+  },
 ];
 
 /*
