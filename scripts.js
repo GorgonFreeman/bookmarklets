@@ -2144,6 +2144,231 @@ const bookmarklets = [
     version: '1.0',
     category: 1,
   },
+  {
+    title: 'Switch Sites AU/US/UK',
+    script: () => {
+      (async () => {
+        try {
+      
+          // Fetch current URL
+          const currentURL = window.location.href;
+          // alert(`Current url: ${ currentURL }`);
+      
+          if ( !/shopify/.test(currentURL) ) {
+            alert("Current URL is not a shopify URL");
+            return;
+          }
+      
+          const urlObject = new URL(currentURL);
+          const params = urlObject.searchParams;
+          const ignoreParams = [
+            "location_id",
+            "appLoadId",
+            "before",
+            "after",
+          ];
+          ignoreParams.forEach(param => params.delete(param));
+          params.delete('location_id');
+          params.delete('appLoadId');
+          const queryString = params.toString() ? `?${params.toString()}` : '';
+      
+          const currentConfig = (() => {
+            if (/white-fox-boutique-aus/.test(currentURL)) {
+              return "au";
+            } else if ( /white-fox-boutique-usa/.test(currentURL)) {
+              return "us";
+            } else if ( /white-fox-boutique-uk/.test(currentURL)) {
+              return "uk";
+            }
+          })();
+      
+          // Ask what store user wants to open
+          const configInput = prompt(`
+            1: AU
+            2: US
+            3: UK
+          `);
+          if (!configInput) {
+            alert('We out.');
+            return;
+          }
+          const configTo = {
+            1: 'au',
+            2: 'us',
+            3: 'uk',
+          }[configInput];
+      
+          if ( configTo == currentConfig ) {
+            alert("Same store as you are at the moment. We out!");
+            return;
+          }
+      
+          const urlGenerateData = (() => {
+      
+            if ( /admin/.test(currentURL)) { // admin url
+      
+              if ( /\/products\?/.test(currentURL) ) { // product search page
+      
+                return {
+                  "context": "admin_product_search",
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else if ( /\/products\/\d*(?:\?\S*)*$/.test(currentURL) ) { // product page
+      
+                return {
+                  "context": "admin_product",
+                  "id": currentURL.split('/').pop().split('?').shift(),
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else if ( /\/products\/\d*\/variants\/\d*(?:\?\S*)*$/.test(currentURL) ) { // product variant page
+      
+                return {
+                  "context": "admin_product_variant",
+                  "id": currentURL.split('/').pop().split('?').shift(),
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                }
+      
+              } else if ( /\/products\/inventory\/\d*\/inventory_history(?:\?\S*)*$/.test(currentURL) ) { // inventory page
+      
+                return {
+                  "context": "admin_inventory_history",
+                  "id": currentURL.split('/')[currentURL.split('/').indexOf('inventory') + 1],
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                }
+      
+              } else if ( /\/customers(?:\?\S*)*$/.test(currentURL) ) { // customer search page
+      
+                return {
+                  "context": "admin_customer_search",
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else if ( /\/customers\/\d*(?:\?\S*)*$/.test(currentURL) ) { // customer editor page
+      
+                return {
+                  "context": "admin_customer",
+                  "id": currentURL.split('/').pop().split('?').shift(),
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else if ( /\/themes(?:\?\S*)*$/.test(currentURL) ) { // theme search page
+      
+                return {
+                  "context": "admin_theme_search",
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else if ( /\/themes\/\d*\/editor(?:\?\S*)*$/.test(currentURL) ) { // theme editor page
+      
+                return {
+                  "context": "admin_theme",
+                  "id": currentURL.split('/')[currentURL.split('/').indexOf('themes') + 1],
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else if ( /\/discounts(?:\?\S*)*$/.test(currentURL) ) { // discount codes search page
+      
+                return {
+                  "context": "admin_discount_search",
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else if ( /\/discounts\/\d*(?:\?\S*)*$/.test(currentURL) ) { // discount code page
+      
+                return {
+                  "context": "admin_discount",
+                  "id": currentURL.split('/').pop().split('?').shift(),
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else if ( /\/collections(?:\?\S*)*$/.test(currentURL) ) { // collections search page
+      
+                return {
+                  "context": "admin_collection_search",
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else if ( /\/collections\/\d*(?:\?\S*)*$/.test(currentURL) ) { // collection page
+      
+                return {
+                  "context": "admin_collection",
+                  "id": currentURL.split('/').pop().split('?').shift(),
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              } else { // default case covering all other pages
+      
+                return {
+                  "context": "admin_default",
+                  "url": urlObject.origin + urlObject.pathname,
+                  "configFrom": currentConfig,
+                  "configTo": configTo,
+                  "queryString": queryString,
+                };
+      
+              }
+            } else {
+              alert("Is not admin url");
+            }
+            return null;
+          })();
+      
+          // alert(`urlGenerateData: ${ JSON.stringify(urlGenerateData) }`);
+          if (!urlGenerateData) {
+            alert("Url generation error");
+            return;
+          }
+      
+          const result = await fetch("https://australia-southeast1-foxtware.cloudfunctions.net/shopifyCrossSiteUrlGenerate", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ urlGenerateData }),
+          });
+          const resultJson = await result.json();
+          console.log("resultJson", resultJson);
+          if (!resultJson.success) {
+            alert(resultJson.message ? resultJson.message : "No cross site URL found!");
+            return;
+          }
+          window.open(resultJson.result, "_blank", "noopener,noreferrer");
+      
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 1,
+  },
 ];
 
 /*
