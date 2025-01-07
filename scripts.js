@@ -2197,6 +2197,10 @@ const bookmarklets = [
             2: 'us',
             3: 'uk',
           }[configInput];
+          if (!configTo) {
+            alert(`Invalid input ${ configInput }! We out.`);
+            return;
+          }
       
           if ( configTo == currentConfig ) {
             alert("Same store as you are at the moment. We out!");
