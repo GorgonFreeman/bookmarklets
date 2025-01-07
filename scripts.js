@@ -2369,6 +2369,126 @@ const bookmarklets = [
     version: '1.0',
     category: 1,
   },
+  {
+    title: 'Schedule Publish from SKU List',
+    script: () => {
+      (async () => {
+        try {
+      
+          const configInput = prompt(`
+            1: AU
+            2: US
+            3: UK
+            4: AU DEV
+          `);
+          if (!configInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const configMap = {
+            1: 'au',
+            2: 'us',
+            3: 'uk',
+            4: 'au-dev',
+          };
+          const config = configMap[configInput];
+      
+          if (!config) {
+            alert('Invalid input! We out.');
+            return;
+          }
+      
+          const skuListInput = prompt(`Paste the list of SKUs here:`);
+          if (!skuListInput) {
+            alert('No SKUs???? We out.');
+            return;
+          }
+      
+          const skuList = skuListInput.split('\n');
+          if (!skuList || !Array.isArray(skuList) || skuList.length <= 0 || skuList[0].includes(',') ) {
+            alert('SKU list cannot be processed! We out.');
+            return
+          }
+      
+          let scheduledDateResult;
+          const scheduledYear = prompt(`Enter year to schedule`);
+          if (scheduledYear === null || scheduledYear.trim() === "" || isNaN(scheduledYear)) {
+            alert(`Invalid year. We out.`);
+            return;
+          }
+      
+          const scheduledMonth = prompt(`Enter month (1-12) to schedule`);
+          if (scheduledMonth === null || scheduledMonth.trim() === "" || isNaN(scheduledMonth) || scheduledMonth < 1 || scheduledMonth > 12) {
+            alert(`Invalid month. We out.`);
+            return;
+          }
+      
+          const maxDays = new Date(scheduledYear, scheduledMonth, 0).getDate();
+          const scheduledDay = prompt(`Enter day (1-${ maxDays }) to schedule`);
+          if (scheduledDay === null || scheduledDay.trim() === "" || isNaN(scheduledDay) || scheduledDay < 0 || scheduledDay > maxDays) {
+            alert(`Invalid day. We out.`);
+            return;
+          }
+      
+          const scheduledHour = prompt(`Enter hour (in 24 hour format) to schedule`);
+          if (scheduledHour === null || scheduledHour.trim() === "" || isNaN(scheduledHour) || scheduledHour < 0 || scheduledHour > 23) {
+            alert(`Invalid hour. We out.`);
+            return;
+          }
+      
+          const scheduledMinute = prompt(`Enter minute of the hour to schedule`);
+          if (scheduledMinute === null || scheduledMinute.trim() === "" || isNaN(scheduledMinute) || scheduledMinute < 0 || scheduledMinute > 59) {
+            alert(`Invalid minute of the hour. We out.`);
+            return;
+          }
+      
+          const currentDate = new Date();
+          const scheduledDate = new Date(scheduledYear, scheduledMonth-1, scheduledDay, scheduledHour, scheduledMinute, 0);
+          if (scheduledDate < currentDate) {
+            alert(`Scheduled date must be in the future. We out.`);
+            return;
+          }
+      
+          const confirmSchedule = prompt(`Confirm the schedule "${ scheduledDate.toDateString() } ${ scheduledDate.toLocaleTimeString() }". Is this correct? (yes/no)`);
+          if ( confirmSchedule !== 'yes' ) {
+            alert(`Aborting. We out!`);
+            return;
+          }
+      
+          scheduledDateResult = scheduledDate.toISOString();
+      
+          const payload = { config, skuList };
+          if ( scheduledDateResult ) {
+            payload.options =  { "scheduledDate": scheduledDateResult };
+          }
+      
+          console.log("scheduled publish", payload);
+      
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/shopifyProductsPublishWithScheduleBySku', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify( payload ),
+          });
+          const resultJson = await result.json();
+          console.log("resultJson", resultJson);
+          if (resultJson?.success) {
+            alert(`Successfully sent details for scheduled publish!\nPlease check one of the products to ensure successful scheduled publish!`)
+          } else {
+            alert(`Something went wrong with your scheduled publish. Please check console for details...`);
+          }
+          
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 3,
+  },
 ];
 
 /*
