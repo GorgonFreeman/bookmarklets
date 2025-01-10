@@ -2082,7 +2082,7 @@ const bookmarklets = [
           }
       
           const skuList = skuListInput.split('\n');
-          if (!skuList || !Array.isArray(skuList) || skuList.length <=1 ) {
+          if (!skuList || !Array.isArray(skuList) || skuList.length == 0 ) {
             alert('SKU list cannot be processed! We out.');
             return
           }
@@ -2109,7 +2109,7 @@ const bookmarklets = [
             urlType
           }
       
-          alert(`Sending order to the kitchen(server).\nPlease wait...`);
+          alert(`Sending order to the kitchen(server).\nPlease press 'ok' to continue and wait for order...`);
       
           const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/shopifyProductsSkuListToUrl', {
             method: 'POST',
