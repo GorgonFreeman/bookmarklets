@@ -2493,6 +2493,94 @@ const bookmarklets = [
     version: '1.0',
     category: 3,
   },
+  {
+    title: '3Clicks Product Import',
+    script: () => {
+      (async () => {
+        try {
+      
+          const send = async (url, data) => {
+            const result = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+            const resultJson = await result.json();
+            console.log(resultJson);
+            return resultJson;
+          };
+      
+          const orderImportSheetConfig = {
+            'BUY SHEET' : [
+              'READY TO SEND',
+            ],
+            '3CLICKS IMPORT' : [
+              'BUYERS',
+              'MERCH',
+            ]
+          };
+      
+          const orderImportFileList = []
+          Object.entries(orderImportSheetConfig).forEach(([key, values]) => {
+            orderImportFileList.push(key);
+          });
+      
+          const fileToReadInput = prompt(`Select file to import 3Clicks orders from (please type a number and press enter):\n${ orderImportFileList.map((key, index) => `${ index + 1 } : ${ key }`).join('\n') }`);
+          if (!fileToReadInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const fileToRead = orderImportFileList[fileToReadInput - 1] || null;
+          if (!fileToRead) {
+            alert('We out.');
+            return;
+          }
+      
+          const orderImportSheetList = [];
+          orderImportSheetConfig[fileToRead].forEach(value => orderImportSheetList.push(value));
+      
+          const sheetToReadInput = prompt(`Select sheet to import 3Clicks orders from (please type a number and press enter):\n${ orderImportSheetList.map((key, index) => `${ index + 1 } : ${ key }`).join('\n') }`);
+          if (!sheetToReadInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const sheetToRead = orderImportSheetList[sheetToReadInput -1] || null;
+          if (!sheetToRead) {
+            alert('We out.');
+            return;
+          }
+      
+          // console.log('fileToRead', fileToRead);
+          // console.log('sheetToRead', sheetToRead);
+      
+          const shouldProceed = confirm(`Want to import orders from ${ fileToRead } > ${ sheetToRead } to ThreeClicks? We'll read your google sheet and create the orders. Click OK to proceed.`);
+          if (!shouldProceed) {
+            return;
+          }
+      
+          alert('Please wait for the import to complete. You can check the alerts_threeclicks_sync Slack channel for updates on the import progress.');
+      
+          const result = await send('https://australia-southeast1-foxtware.cloudfunctions.net/threeclicksPurchaseOrdersImport', { fileToRead, sheetToRead });
+      
+          if (result.success) {
+            alert(`Import complete!`);
+          } else {
+            alert(`Import failed. Check the alerts_threeclicks_sync Slack channel for errors.`);
+          }
+      
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
