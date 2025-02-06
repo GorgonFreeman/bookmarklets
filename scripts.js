@@ -2577,6 +2577,7 @@ const bookmarklets = [
       
         } catch(err) {
           alert(err);
+          console.error(err);
         }
       })();
     },
