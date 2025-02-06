@@ -2519,7 +2519,10 @@ const bookmarklets = [
             '3CLICKS IMPORT' : [
               'BUYERS',
               'MERCH',
-            ]
+            ],
+            'MERCH - BUY SHEET' : [
+              'READY TO SEND',
+            ],
           };
       
           const orderImportFileList = []
