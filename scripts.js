@@ -2585,6 +2585,27 @@ const bookmarklets = [
     version: '1.0',
     category: 5,
   },
+  {
+    title: 'Check all app permissions checkboxes',
+    script: () => {
+      // Select all elements with the class 'Polaris-LegacyCard__Section'
+      const sections = document.querySelectorAll('.Polaris-LegacyCard__Section');
+  
+      // Convert the NodeList to an array and iterate over each section
+      Array.from(sections).forEach(section => {
+        // Find a checkbox input inside the section
+        const checkbox = section.querySelector('input[type="checkbox"]');
+  
+        // If a checkbox exists, click it
+        if (checkbox && !checkbox.checked) {
+          checkbox.click();
+        }
+      });
+    },
+    docs: '',
+    version: '1.0',
+    category: 3,
+  },
 ];
 
 /*
