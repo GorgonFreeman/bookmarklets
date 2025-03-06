@@ -2586,6 +2586,91 @@ const bookmarklets = [
     category: 5,
   },
   {
+    title: '3Clicks Shipment Import',
+    script: () => {
+      (async () => {
+        try {
+      
+          const send = async (url, data) => {
+            const result = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+            const resultJson = await result.json();
+            console.log(resultJson);
+            return resultJson;
+          };
+      
+          const shipmentImportSheetConfig = {
+            'SHIPMENT IMPORT' : [
+              'IMPORT',
+            ],
+          };
+      
+          const shipmentImportFileList = []
+          Object.entries(shipmentImportSheetConfig).forEach(([key, values]) => {
+            shipmentImportFileList.push(key);
+          });
+      
+          const fileToReadInput = prompt(`Select file to import 3Clicks shipments from (please type a number and press enter):\n${ shipmentImportFileList.map((key, index) => `${ index + 1 } : ${ key }`).join('\n') }`);
+          if (!fileToReadInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const fileToRead = shipmentImportFileList[fileToReadInput - 1] || null;
+          if (!fileToRead) {
+            alert('We out.');
+            return;
+          }
+      
+          const shipmentImportSheetList = [];
+          shipmentImportSheetConfig[fileToRead].forEach(value => shipmentImportSheetList.push(value));
+      
+          const sheetToReadInput = prompt(`Select sheet to import 3Clicks shipments from (please type a number and press enter):\n${ shipmentImportSheetList.map((key, index) => `${ index + 1 } : ${ key }`).join('\n') }`);
+          if (!sheetToReadInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const sheetToRead = shipmentImportSheetList[sheetToReadInput -1] || null;
+          if (!sheetToRead) {
+            alert('We out.');
+            return;
+          }
+      
+          // console.log('fileToRead', fileToRead);
+          // console.log('sheetToRead', sheetToRead);
+      
+          const shouldProceed = confirm(`Want to import shipments from ${ fileToRead } > ${ sheetToRead } to ThreeClicks? We'll read your google sheet and create the shipments. Click OK to proceed.`);
+          if (!shouldProceed) {
+            return;
+          }
+      
+          alert('Please wait for the import to complete. You can check the alerts_threeclicks_sync Slack channel for updates on the import progress.');
+      
+          const result = await send('https://australia-southeast1-foxtware.cloudfunctions.net/threeclicksShipmentsImport', { fileToRead, sheetToRead });
+      
+          if (result.success) {
+            alert(`Import complete!`);
+          } else {
+            alert(`Import failed. Check the alerts_threeclicks_sync Slack channel for errors.`);
+          }
+      
+        } catch(err) {
+          alert(err);
+          console.error(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
+  {
     title: 'Check all app permissions checkboxes',
     script: () => {
       // Select all elements with the class 'Polaris-LegacyCard__Section'
