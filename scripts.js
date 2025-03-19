@@ -2671,6 +2671,70 @@ const bookmarklets = [
     category: 5,
   },
   {
+    title: 'UK Inventory Hold',
+    script: () => {
+      (async () => {
+        try {
+      
+          // Added for extra validation that this bookmarklet will only work for UK
+          const configInput = prompt(`
+            1: UK
+          `);
+          if (!configInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const configMap = {
+            1: 'uk',
+          };
+          const config = configMap[configInput];
+      
+          if (!config) {
+            alert('Invalid input! We out.');
+            return;
+          }
+      
+          const skuListInput = prompt(`Paste the list of SKUs here:`);
+          if (!skuListInput) {
+            alert('No SKUs???? We out.');
+            return;
+          }
+      
+          const skuList = skuListInput.split('\n');
+          if (!skuList || !Array.isArray(skuList) || skuList.length <=1 ) {
+            alert('SKU list cannot be processed! We out.');
+            return;
+          }
+      
+          // TODO: Add request to GCloud hosted function for inventory hold
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/shopifyProductsUKInventoryHold', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ skuList }),
+          });
+      
+          const resultJson = await result.json();
+          console.log(resultJson);
+      
+          if (resultJson.success) {
+            alert(`Inventory hold set successfully!`);
+          } else {
+            alert(`Inventory hold errored! ${ resultJson.errors.join(', ') }`);
+          }
+      
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 1,
+  },
+  {
     title: 'Check all app permissions checkboxes',
     script: () => {
       // Select all elements with the class 'Polaris-LegacyCard__Section'
