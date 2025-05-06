@@ -2078,7 +2078,7 @@ const bookmarklets = [
             3: 'uk',
             4: 'ca',
           };
-          const store = storeMap[storeInput];
+          const store = storeMap[configInput];
       
           if (!config) {
             alert('Invalid input! We out.');
