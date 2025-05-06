@@ -2057,6 +2057,7 @@ const bookmarklets = [
             1: AU
             2: US
             3: UK
+            4: CA
           `);
           if (!configInput) {
             alert('We out.');
@@ -2067,8 +2068,17 @@ const bookmarklets = [
             1: 'au',
             2: 'us',
             3: 'uk',
+            4: 'au',
           };
           const config = configMap[configInput];
+      
+          const storeMap = {
+            1: 'au',
+            2: 'us',
+            3: 'uk',
+            4: 'ca',
+          };
+          const store = storeMap[storeInput];
       
           if (!config) {
             alert('Invalid input! We out.');
@@ -2105,6 +2115,7 @@ const bookmarklets = [
       
           const payload = {
             config,
+            store,
             skuList,
             urlType
           }
