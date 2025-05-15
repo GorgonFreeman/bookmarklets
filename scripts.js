@@ -2746,6 +2746,75 @@ const bookmarklets = [
     category: 1,
   },
   {
+    title: 'Generate BDay Discount',
+    script: () => {
+      (async () => {
+        try {
+      
+          const send = async (url, data) => {
+            const result = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+            const resultJson = await result.json();
+            console.log(resultJson);
+            return resultJson;
+          }
+      
+          const configInput = prompt(`
+            1: AU
+            2: US
+            3: UK
+          `);
+          if (!configInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const configMap = {
+            1: 'au',
+            2: 'us',
+            3: 'uk',
+          };
+          const config = configMap[configInput];
+      
+          const email = prompt(`What's the customer's email?`);
+          if (!email) {
+            alert('No email provided.');
+            return;
+          }
+      
+          alert(`email: ${ email }`);
+      
+          const result = await fetch(`https://australia-southeast1-foxtware.cloudfunctions.net/randoShopifyBirthdayDiscountCodeGenerate`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ config, email }),
+          });
+          const resultJson = await result.json();
+      
+          if (!resultJson || !resultJson.success) {
+            alert(`Discount code creation failed: ${ resultJson.message }`);
+          }
+      
+          alert(`Discount code created: ${ resultJson.object.discountCode }`);
+          alert(`Please ensure you've copied the discount code here: ${ resultJson.object.discountCode }`);
+          
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 0,
+  },
+  {
     title: 'Check all app permissions checkboxes',
     script: () => {
       // Select all elements with the class 'Polaris-LegacyCard__Section'
