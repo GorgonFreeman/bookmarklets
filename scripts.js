@@ -2787,8 +2787,6 @@ const bookmarklets = [
             return;
           }
       
-          alert(`email: ${ email }`);
-      
           const result = await fetch(`https://australia-southeast1-foxtware.cloudfunctions.net/randoShopifyBirthdayDiscountCodeGenerate`, {
             method: 'POST',
             headers: {
@@ -2800,6 +2798,7 @@ const bookmarklets = [
       
           if (!resultJson || !resultJson.success) {
             alert(`Discount code creation failed: ${ resultJson.message }`);
+            return;
           }
       
           alert(`Discount code created: ${ resultJson.object.discountCode }`);
