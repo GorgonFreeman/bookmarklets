@@ -2811,7 +2811,7 @@ const bookmarklets = [
     },
     docs: '',
     version: '1.0',
-    category: 0,
+    category: 1,
   },
   {
     title: 'Check all app permissions checkboxes',
