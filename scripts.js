@@ -2834,6 +2834,99 @@ const bookmarklets = [
     version: '1.0',
     category: 3,
   },
+  {
+    title: 'SKU List > Inventory Import Sheet',
+    script: () => {
+      (async () => {
+        try {
+      
+          const send = async (url, data) => {
+            const result = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+            const resultJson = await result.json();
+            console.log(resultJson);
+            return resultJson;
+          }
+      
+          const configInput = prompt(`
+            1: AU
+            2: US
+            3: BADDEST
+          `);
+          if (!configInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const configMap = {
+            1: 'au',
+            2: 'us',
+            3: 'baddest',
+          };
+          const config = configMap[configInput];
+      
+          if (!config) {
+            alert('Invalid input! We out.');
+            return;
+          }
+      
+          const skusTypeInput = prompt(`
+            1: Full SKUs
+            2: Partial SKUs
+          `);
+          if (!skusTypeInput) {
+            alert('We out.');
+            return;
+          }
+      
+          const skusTypeMap = {
+            1: 'fullSkus',
+            2: 'partialSkus',
+          };
+          const skusType = skusTypeMap[skusTypeInput];
+      
+          if (!skusType) {
+            alert('We out.');
+            return;
+          }
+      
+          const skuListInput = prompt(`Paste the list of SKUs here (One SKU per line):`);
+          if (!skuListInput) {
+            alert('No SKUs???? We out.');
+            return;
+          }
+      
+          const skuList = skuListInput.split('\n');
+          if (!skuList || !Array.isArray(skuList) || skuList.length <= 0 || skuList[0].includes(',') ) {
+            alert('SKU list cannot be processed! We out.');
+            return;
+          }
+      
+          const payload = { config, options: { [skusType]: skuList } };
+      
+          const result = await send('https://australia-southeast1-foxtware.cloudfunctions.net/apexInventoryToImportSheetsV2', payload);
+          console.log('result', result);
+      
+          if (result?.success) {
+            alert(`Inventory import sheet generated. \nPlease check foxtron_fetch for the import sheet link.`);
+          } else {
+            alert(`Inventory import sheet generation failed. ${ result?.message }`);
+          }
+          
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
