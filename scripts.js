@@ -2616,7 +2616,13 @@ const bookmarklets = [
           };
       
           const shipmentImportSheetConfig = {
-            'SHIPMENT IMPORT' : [
+            'SHIPMENT IMPORT (CHRIS)' : [
+              'IMPORT',
+            ],
+            'SHIPMENT IMPORT (KAI)' : [
+              'IMPORT',
+            ],
+            'SHIPMENT IMPORT (PEPPER)' : [
               'IMPORT',
             ],
           };
