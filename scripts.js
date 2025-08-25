@@ -2933,6 +2933,51 @@ const bookmarklets = [
     version: '1.0',
     category: 5,
   },
+  {
+    title: 'Pipe17 Arrival Resync',
+    script: () => {
+      (async () => {
+        try {
+      
+          const extOrderId = prompt(`Please enter the 3C Shipment/ P17 PO you want to resync to P17 Arrivals:`);
+          if (!extOrderId) {
+            alert('No 3C Shipment/ P17 PO provided? We out.')
+            return;
+          }
+      
+          const suffix = prompt(`Please enter the desired suffix for the Arrival ID\n(e.g. "-1", "-2" like "US-DG002057,2060,ETC-1")`);
+          if (!suffix) {
+            alert('No suffix provided. That makes me sad.');
+            return;
+          }
+      
+          const result = await fetch('https://australia-southeast1-foxtware.cloudfunctions.net/pipeSeventeenArrivalResyncFromPurchase', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              extOrderId,
+              suffix,
+            }),
+          });
+          const data = await result.json();
+          console.log(data);
+          if (data.success) {
+            alert('Arrival Resynced Successfully');
+          } else {
+            alert(`${ data.errors.join('\n') }`);
+          }
+        } catch(err) {
+          alert('Bookmarklet failed. Please check the console for more details.');
+          console.error("Error in bookmarklet", err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
