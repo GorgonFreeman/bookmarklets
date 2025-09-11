@@ -2978,6 +2978,36 @@ const bookmarklets = [
     version: '1.0',
     category: 5,
   },
+  {
+    title: 'Pipe17 > 3C Status & Qty Sync',
+    script: () => {
+      (async () => {
+        try {
+      
+          const shouldProceed = confirm(`Wanna sync Pipe Seventeen POs to ThreeClicks Shipments? Click OK to proceed.`);
+          if (!shouldProceed) {
+            return;
+          }
+      
+          fetch('https://australia-southeast1-foxtware.cloudfunctions.net/apexPurchaseOrderSweepPipeSeventeenToThreeclicks', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+          });
+      
+          alert('Triggered! Check the #events_feed__3c_p17_sync Slack channel for updates.');
+      
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
