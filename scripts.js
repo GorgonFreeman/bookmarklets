@@ -1562,7 +1562,7 @@ const bookmarklets = [
           }
 
           const configs = {
-            wf: ['au', 'us'], // 'uk'],
+            wf: ['au'], // 'us'], // 'uk'],
             baddest: ['baddest'],
           }[modeKey];
 
