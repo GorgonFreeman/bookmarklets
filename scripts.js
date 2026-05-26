@@ -2746,15 +2746,6 @@ const bookmarklets = [
           };
           const config = configMap[configInput];
       
-          let sheetName = '';
-          if (config === 'uk') {
-            sheetName = prompt(`Enter JDA export sheet name:`);
-            if (!sheetName) {
-              alert('UK inventory import requires a JDA export sheet name! We out.');
-              return;
-            }
-          }
-      
           if (!config) {
             alert('Invalid input! We out.');
             return;
@@ -2792,7 +2783,7 @@ const bookmarklets = [
             return;
           }
       
-          const payload = { config, options: { [skusType]: skuList, ...sheetName ? { sheetName } : {} } };
+          const payload = { config, options: { [skusType]: skuList } };
       
           const result = await send('https://australia-southeast1-foxtware.cloudfunctions.net/apexInventoryToImportSheetsV2', payload);
           console.log('result', result);
