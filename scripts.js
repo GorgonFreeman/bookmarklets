@@ -2878,6 +2878,57 @@ const bookmarklets = [
     version: '1.0',
     category: 5,
   },
+  {
+    title: 'Pipe17 > 3C Status & Qty Sync',
+    script: () => {
+      (async () => {
+        try {
+      
+          const send = async (url, data) => {
+            const result = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+            const resultJson = await result.json();
+            console.log(resultJson);
+            return resultJson;
+          }
+      
+          const skuListInput = prompt(`Paste the list of SKUs here:`);
+          if (!skuListInput) {
+            alert('No SKUs???? We out.');
+            return;
+          }
+      
+          const skuList = skuListInput.split('\n').map(sku => sku.trim()).filter(Boolean);
+          if (!skuList || !Array.isArray(skuList) || skuList.length <= 0 || skuList[0].includes(',')) {
+            alert('SKU list cannot be processed! We out.');
+            return;
+          }
+      
+          const payload = {
+            options: {
+              updatedSinceDaysAgo: '1',
+              onlySkus: skuList,
+            },
+          }
+      
+          send('https://australia-southeast1-foxtware.cloudfunctions.net/apexProductsSweepStylearcadeToThreeclicks', payload);
+      
+          alert(`Sync started for ${ skuList.length } SKU(s). Check the #alerts_threeclicks_sync channel for the result.`);
+      
+        } catch(err) {
+          alert(err);
+        }
+      })();
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
