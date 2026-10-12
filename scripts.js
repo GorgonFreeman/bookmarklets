@@ -2879,7 +2879,7 @@ const bookmarklets = [
     category: 5,
   },
   {
-    title: 'Pipe17 > 3C Status & Qty Sync',
+    title: 'SKU List > 3C Sync',
     script: () => {
       (async () => {
         try {
