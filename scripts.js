@@ -2903,7 +2903,7 @@ const bookmarklets = [
             return;
           }
       
-          const skuList = skuListInput.split('\n').map(sku => sku.trim()).filter(Boolean);
+          const skuList = skuListInput.split(/\s+/).filter(Boolean);
           if (!skuList || !Array.isArray(skuList) || skuList.length <= 0 || skuList[0].includes(',')) {
             alert('SKU list cannot be processed! We out.');
             return;
