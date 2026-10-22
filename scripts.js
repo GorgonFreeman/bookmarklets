@@ -2930,7 +2930,7 @@ const bookmarklets = [
     category: 5,
   },
   {
-    title: 'Stylearcade Product Export',
+    title: 'Style Arcade Product Export',
     script: () => {
       (async () => {
         try {
@@ -2956,7 +2956,7 @@ const bookmarklets = [
           const payload = { options: {} };
       
           send('https://australia-southeast1-foxtware.cloudfunctions.net/stylearcadeProductExport', payload);
-          alert(`Stylearcade product export in progress! Check #foxtron_stylearcade_product_export for updates...`);
+          alert(`Style Arcade product export in progress! Check #foxtron_stylearcade_product_export for updates...`);
       
         } catch(err) {
           alert(err);
