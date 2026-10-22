@@ -2929,6 +2929,45 @@ const bookmarklets = [
     version: '1.0',
     category: 5,
   },
+  {
+    title: 'Stylearcade Product Export',
+    script: () => {
+      (async () => {
+        try {
+      
+          const send = async (url, data) => {
+            const result = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+            const resultJson = await result.json();
+            console.log(resultJson);
+            return resultJson;
+          };
+      
+          const shouldProceed = confirm(`We're going to export approved Style Arcade products to Google Sheets. It'll take a while, the sheet link will be posted in #foxtron_stylearcade_product_export. Cool?`);
+          if (!shouldProceed) {
+            return;
+          }
+      
+          const payload = { options: {} };
+      
+          send('https://australia-southeast1-foxtware.cloudfunctions.net/stylearcadeProductExport', payload);
+          alert(`Stylearcade product export in progress! Check #foxtron_stylearcade_product_export for updates...`);
+      
+        } catch(err) {
+          alert(err);
+        }
+      })();
+      
+    },
+    docs: '',
+    version: '1.0',
+    category: 5,
+  },
 ];
 
 /*
